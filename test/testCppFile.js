@@ -235,7 +235,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cpp.parse('ResBundleAdaptor::Instance().getLocString("Try again."));');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("Try again."));');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -329,7 +329,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); /* i18n OK button for Bluray player */');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); /* i18n Yes button for Bluray player */');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -362,7 +362,7 @@ module.exports.cppfile = {
         test.ok(r);
         test.equal(r.getSource(), "Yes");
         test.equal(r.getKey(), "Yes");
-        test.equal(r.getComment(), "YesK button for Bluray player");
+        test.equal(r.getComment(), "Yes button for Bluray player");
 
         test.done();
     },
@@ -740,7 +740,7 @@ module.exports.cppfile = {
 
         r = set.getBySource("Channel 20 (channel number)");
         test.ok(r);
-        test.equal(r.getSource(), "PChannel 20 (channel number)");
+        test.equal(r.getSource(), "Channel 20 (channel number)");
         test.equal(r.getKey(), "Channel 20 (channel number)");
 
         test.done();

@@ -72,7 +72,7 @@ CppFile.unescapeString = function(string) {
  * @returns {String} a unique key for this string
  */
 CppFile.prototype.makeKey = function(source) {
-    return source;
+    return unescapeString(source);;
 };
 
 CppFile.trimComment = function(commentString) {
@@ -86,8 +86,8 @@ CppFile.trimComment = function(commentString) {
     return trimComment;
 }
 
-var reGetLocString = new RegExp(/\bresBundle_getLocString\(((\\"|[^"])*)((\\"|[^"])*)\"((\\"|[^"])*)"\)\;/g);
-var reGetLocStringWithKey = new RegExp(/\bresBundle_getLocStringWithKey\((.*)\,\s*[\"](.*)[\"]\,\s*[\"](.*)*[\"]\)/g);
+var reGetLocString = new RegExp(/\bgetLocString\(\s*"(.*)"\)/g);
+var reGetLocStringWithKey = new RegExp(/\bgetLocStringWithKey\((.*)\,\s*[\"](.*)[\"]\,\s*[\"](.*)*[\"]\)/g);
 var reI18nComment = new RegExp(/\/(\*|\/)\s*i18n\s*(.*)($|\*\/)/);
 
 /**
@@ -104,8 +104,8 @@ CppFile.prototype.parse = function(data) {
     // To extract resBundle_getLocString()
     reGetLocString.lastIndex = 0; // just to be safe
     var result = reGetLocString.exec(data);
-    while (result && result.length > 1 && result[5]) {
-        match = result[5];
+    while (result && result.length > 1 && result[1]) {
+        match = result[1];
 
         if (match && match.length) {
             logger.trace("Found string key: " + this.makeKey(match) + ", string: '" + match + "'");
@@ -116,7 +116,7 @@ CppFile.prototype.parse = function(data) {
             var commentResult = reI18nComment.exec(line);
             comment = (commentResult && commentResult.length > 1) ? commentResult[2] : undefined;
 
-            match = CFile.unescapeString(match);
+            match = CppFile.unescapeString(match);
 
             var r = this.API.newResource({
                 resType: "string",
@@ -154,8 +154,8 @@ CppFile.prototype.parse = function(data) {
             var line = data.substring(reGetLocStringWithKey.lastIndex, last);
             var commentResult = reI18nComment.exec(line);
             comment = (commentResult && commentResult.length > 1) ? commentResult[2] : undefined;
-            match = CFile.unescapeString(match);
-            key = CFile.unescapeString(key);
+            match = CppFile.unescapeString(match);
+            key = CppFile.unescapeString(key);
             var r = this.API.newResource({
                 resType: "string",
                 project: this.project.getProjectId(),
