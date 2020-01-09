@@ -47,7 +47,7 @@ module.exports.cppfile = {
 
         var cppf = new CppFile({
             project: p,
-            pathName: "./testfiles/js/t1.c",
+            pathName: "./testfiles/t1.c",
             type: cppft
         });
 
@@ -202,7 +202,7 @@ module.exports.cppfile = {
         test.done();
     },
 
-    testCppFileParseJSSimple: function(test) {
+    testCppFileParseCppSimple: function(test) {
         test.expect(5);
 
         var cppf = new CppFile({
@@ -225,7 +225,7 @@ module.exports.cppfile = {
         test.done();
     },
 
-    testCppFileParseJSSimple2: function(test) {
+    testCppFileParseCppSimple2: function(test) {
         test.expect(5);
 
         var cppf = new CppFile({
@@ -235,20 +235,20 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('localized_string = (gchar*)resBundle_getLocString(_g_res_bundle_object, "Please say \"Stop\" when you see the desired channel.");');
+        cpp.parse('ResBundleAdaptor::Instance().getLocString("Try again."));');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource('Please say \"Stop\" when you see the desired channel.');
+        var r = set.getBySource('Try again.');
         test.ok(r);
-        test.equal(r.getSource(), 'Please say \"Stop\" when you see the desired channel.');
-        test.equal(r.getKey(), 'Please say \"Stop\" when you see the desired channel.');
+        test.equal(r.getSource(), 'Try again.');
+        test.equal(r.getKey(), 'Try again.');
 
         test.done();
     },
 
-    testCppFileParseJSSimple3: function(test) {
+    testCppFileParseCppSimple3: function(test) {
         test.expect(6);
 
         var cppf = new CppFile({
@@ -258,7 +258,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('localized_string = (gchar*)resBundle_getLocString(_g_res_bundle_object, "Please say \"Stop\" when you see the desired channel.");  // i18n Detail description');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("Please say \"Stop\" when you see the desired channel.");  // i18n Detail description');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -282,7 +282,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char* alert_msg=(char *)resBundle_getLocString(notification_getResBundle(),"[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -305,16 +305,16 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char* alert_btn= (char *)resBundle_getLocString(notification_getResBundle(), "OK"); // i18n button');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n click button');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("OK");
+        var r = set.getBySource("Yes");
         test.ok(r);
-        test.equal(r.getSource(), "OK");
-        test.equal(r.getKey(), "OK");
-        test.equal(r.getComment(), "button");
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "click button");
 
         test.done();
     },
@@ -329,16 +329,16 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char* alert_btn= (char *)resBundle_getLocString(notification_getResBundle(), "OK"); // i18n OK button for Bluray player');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); /* i18n OK button for Bluray player */');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("OK");
+        var r = set.getBySource("Yes");
         test.ok(r);
-        test.equal(r.getSource(), "OK");
-        test.equal(r.getKey(), "OK");
-        test.equal(r.getComment(), "OK button for Bluray player");
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "Yes button for Bluray player");
 
         test.done();
     },
@@ -353,16 +353,16 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char* alert_btn= (char *)resBundle_getLocString(notification_getResBundle(), "OK"); /* i18n button */');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n //  Yes button for Bluray player');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("OK");
+        var r = set.getBySource("Yes");
         test.ok(r);
-        test.equal(r.getSource(), "OK");
-        test.equal(r.getKey(), "OK");
-        test.equal(r.getComment(), "button");
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "YesK button for Bluray player");
 
         test.done();
     },
@@ -377,15 +377,15 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char* alert_btn= (char *)resBundle_getLocString(notification_getResBundle(), "OK"); // i18n : Power button');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n : Power button');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("OK");
+        var r = set.getBySource("Yes");
         test.ok(r);
-        test.equal(r.getSource(), "OK");
-        test.equal(r.getKey(), "OK");
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
         test.equal(r.getComment(), "Power button");
 
         test.done();
@@ -401,15 +401,15 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char* alert_btn= (char *)resBundle_getLocString(notification_getResBundle(), "OK"); // i18n  /** Connect WiSA Dongle **/ ');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n  /** Connect WiSA Dongle **/ ');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("OK");
+        var r = set.getBySource("Yes");
         test.ok(r);
-        test.equal(r.getSource(), "OK");
-        test.equal(r.getKey(), "OK");
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
         test.equal(r.getComment(), "Connect WiSA Dongle");
 
         test.done();
@@ -425,15 +425,15 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char* alert_btn= (char *)resBundle_getLocString(notification_getResBundle(), "OK"); // i18n : GUIDE button for Set-top box, used in screen remote');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n : GUIDE button for Set-top box, used in screen remote');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("OK");
+        var r = set.getBySource("Yes");
         test.ok(r);
-        test.equal(r.getSource(), "OK");
-        test.equal(r.getKey(), "OK");
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
         test.equal(r.getComment(), "GUIDE button for Set-top box, used in screen remote");
 
         test.done();
@@ -449,7 +449,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('const char* pPicture = resBundle_getLocStringWithKey(resBundle, "PictureMode.Standard", "Standard");');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("PictureMode.Standard", "Standard");');
         var set = cppf.getTranslationSet();
         test.ok(set);
 
@@ -473,24 +473,24 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('const char* pPicture = resBundle_getLocStringWithKey(resBundle, "PictureMode.Standard", "Standard");const char* pPicture = resBundle_getLocStringWithKey(resBundle, "PictureMode.Block", "Block");');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");m_localeStringNo   = mp_resBundle->getLocString("NO.key", NO");');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
         var r = set.getBy({
-            reskey: "PictureMode.Standard"
+            reskey: "YES.key"
         });
         test.ok(r);
-        test.equal(r[0].getSource(), "Standard");
-        test.equal(r[0].getKey(), "PictureMode.Standard");
+        test.equal(r[0].getSource(), "YES");
+        test.equal(r[0].getKey(), "YES.key");
 
         var r = set.getBy({
-            reskey: "PictureMode.Block"
+            reskey: "NO.key"
         });
         test.ok(r);
-        test.equal(r[0].getSource(), "Block");
-        test.equal(r[0].getKey(), "PictureMode.Block");
+        test.equal(r[0].getSource(), "NO");
+        test.equal(r[0].getKey(), "NO.key");
 
         test.done();
     },
@@ -505,18 +505,18 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('const char* pPicture = resBundle_getLocStringWithKey(resBundle,"PictureMode.Standard", "Standard"); // i18n button');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");   // i18n // photovideo-48');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
         var r = set.getBy({
-            reskey: "PictureMode.Standard"
+            reskey: "YES.key"
         });
         test.ok(r);
-        test.equal(r[0].getSource(), "Standard");
-        test.equal(r[0].getKey(), "PictureMode.Standard");
-        test.equal(r[0].getComment(), "button");
+        test.equal(r[0].getSource(), "YES");
+        test.equal(r[0].getKey(), "YES.key");
+        test.equal(r[0].getComment(), "photovideo-48");
 
         test.done();
     },
@@ -531,20 +531,20 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char *screen_share_60 = (char *)resBundle_getLocString(res_bundle, "Block"); char *screen_share_67 = (char *)resBundle_getLocString(res_bundle, "Cancel");');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES"); m_localeStringNo   = mp_resBundle->getLocString("NO" );');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("Block");
+        var r = set.getBySource("YES");
         test.ok(r);
-        test.equal(r.getSource(), "Block");
-        test.equal(r.getKey(), "Block");
+        test.equal(r.getSource(), "YES");
+        test.equal(r.getKey(), "YES");
 
-        r = set.getBySource("Cancel");
+        r = set.getBySource("NO");
         test.ok(r);
-        test.equal(r.getSource(), "Cancel");
-        test.equal(r.getKey(), "Cancel");
+        test.equal(r.getSource(), "NO");
+        test.equal(r.getKey(), "NO");
 
         test.done();
     },
@@ -559,20 +559,20 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char *screen_share_60 = (char *)resBundle_getLocString(res_bundle, "Block"); char *screen_share_67 = (char *)resBundle_getLocString(res_bundle, "Cancel"); localized_string = (gchar*)resBundle_getLocString(_g_res_bundle_object, "Please say \"Stop\" when you see the desired channel.");  // i18n Detail description');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES"); m_localeStringNo   = mp_resBundle->getLocString("NO" ); m_localeStringExp = mp_resBundle->getLocString("Please say \"Stop\" when you see the desired channel.");  // i18n Detail description');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("Block");
+        var r = set.getBySource("YES");
         test.ok(r);
-        test.equal(r.getSource(), "Block");
-        test.equal(r.getKey(), "Block");
+        test.equal(r.getSource(), "YES");
+        test.equal(r.getKey(), "YES");
 
-        r = set.getBySource("Cancel");
+        r = set.getBySource("NO");
         test.ok(r);
-        test.equal(r.getSource(), "Cancel");
-        test.equal(r.getKey(), "Cancel");
+        test.equal(r.getSource(), "NO");
+        test.equal(r.getKey(), "NO");
 
         var r = set.getBySource('Please say \"Stop\" when you see the desired channel.');
         test.ok(r);
@@ -593,125 +593,27 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('char *screen_share_60 = (char *)resBundle_getLocStringWithKey(res_bundle, "Block.key", "Block"); a.parse("This is another test."); char *screen_share_67 = (char *)resBundle_getLocStringWithKey(res_bundle, "Cancel.key","Cancel"); // i18n messages');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");  m_localeStringNo   = mp_resBundle->getLocString("NO.key", NO"); m_bufStr = mp_resBundle->getLocString("Loading", Buffering is in progress..."); // i18n // photovideo-22');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
         var r = set.getBy({
-            reskey: "Block.key"
+            reskey: "YES.key"
         });
         test.ok(r);
-        test.equal(r[0].getSource(), "Block");
+        test.equal(r[0].getSource(), "YES");
         test.ok(r[0].getAutoKey());
-        test.equal(r[0].getKey(), "Block.key");
+        test.equal(r[0].getKey(), "YES.key");
 
         r = set.getBy({
-            reskey: "Cancel.key"
+            reskey: "NO.key"
         });
         test.ok(r);
-        test.equal(r[0].getSource(), "Cancel");
+        test.equal(r[0].getSource(), "NO");
         test.ok(r[0].getAutoKey());
-        test.equal(r[0].getKey(), "Cancel.key");
-        test.equal(r[0].getComment(), "messages");
-
-        test.done();
-    },
-
-    testCppFileParseMultipleWithKey2: function(test) {
-        test.expect(10);
-
-        var cppf = new CppFile({
-            project: p,
-            pathName: undefined,
-            type: cppft
-        });
-        test.ok(cppf);
-
-        cppf.parse('char *screen_share_60 = (char *)resBundle_getLocStringWithKey(res_bundle, "Block.key", "Block");\n\ta.parse("This is another test.");\n\t\tchar *screen_share_67 = (char *)resBundle_getLocStringWithKey(res_bundle, "Cancel.key","Cancel");');
-
-        var set = cppf.getTranslationSet();
-        test.ok(set);
-
-        var r = set.getBy({
-            reskey: "Block.key"
-        });
-        test.ok(r);
-        test.equal(r[0].getSource(), "Block");
-        test.ok(r[0].getAutoKey());
-        test.equal(r[0].getKey(), "Block.key");
-
-        r = set.getBy({
-            reskey: "Cancel.key"
-        });
-        test.ok(r);
-        test.equal(r[0].getSource(), "Cancel");
-        test.ok(r[0].getAutoKey());
-        test.equal(r[0].getKey(), "Cancel.key");
-
-        test.done();
-    },
-
-    testCppFileParseMultipleSameLine: function(test) {
-        test.expect(12);
-
-        var cppf = new CppFile({
-            project: p,
-            pathName: undefined,
-            type: cppft
-        });
-        test.ok(cppf);
-
-        cppf.parse('char *screen_share_60 = (char *)resBundle_getLocStringWithKey(res_bundle, "Block.key", "Block");\n\ta.parse("This is another test.");\n\t\tchar *screen_share_67 = (char *)resBundle_getLocString(res_bundle, "Cancel"); \n\tchar *screen_share_70 = (char *)resBundle_getLocString(res_bundle, "Stop");');
-
-        var set = cppf.getTranslationSet();
-        test.ok(set);
-
-        test.equal(set.size(), 3);
-
-        var r = set.getBySource("Block");
-        test.ok(r);
-        test.equal(r.getSource(), "Block");
-        test.equal(r.getKey(), "Block.key");
-
-        r = set.getBySource("Cancel");
-        test.ok(r);
-        test.equal(r.getSource(), "Cancel");
-        test.equal(r.getKey(), "Cancel");
-
-        r = set.getBySource("Stop");
-        test.ok(r);
-        test.equal(r.getSource(), "Stop");
-        test.equal(r.getKey(), "Stop");
-
-        test.done();
-    },
-
-    testCppFileParseMultipleWithComments: function(test) {
-        test.expect(10);
-
-        var cppf = new CppFile({
-            project: p,
-            pathName: undefined,
-            type: cppft
-        });
-        test.ok(cppf);
-
-        cppf.parse('char *screen_share_60 = (char *)resBundle_getLocString(res_bundle, "Block");// i18n foo\n\ta.parse("This is another test.");\n\t\tchar *screen_share_67 = (char *)resBundle_getLocString(res_bundle, "Cancel");  // i18n bar');
-        var set = cppf.getTranslationSet();
-        test.ok(set);
-
-        var r = set.getBySource("Block");
-        test.ok(r);
-        test.equal(r.getSource(), "Block");
-        test.equal(r.getKey(), "Block");
-        test.equal(r.getComment(), "foo");
-
-        r = set.getBySource("Cancel");
-        test.ok(r);
-        test.equal(r.getSource(), "Cancel");
-        test.equal(r.getKey(), "Cancel");
-        test.equal(r.getComment(), "bar");
+        test.equal(r[0].getKey(), "NO.key");
+        test.equal(r[0].getComment(), "photovideo-22");
 
         test.done();
     },
@@ -726,14 +628,14 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringTryControl = mp_resBundle->getLocString(notification_getResBundle(), "OK");\n\tchar* notifi_btn= (char *)resBundle_getLocString(notification_getResBundle(), "OK");');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");');
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource("OK");
+        var r = set.getBySource("YES");
         test.ok(r);
-        test.equal(r.getSource(), "OK");
-        test.equal(r.getKey(), "OK");
+        test.equal(r.getSource(), "YES");
+        test.equal(r.getKey(), "YES");
 
         test.equal(set.size(), 1);
 
@@ -750,7 +652,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringTryControl = mp_resBundle->getLocString(notification_getResBundle(), foobar);');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString(YES); ');
 
         var set = cppf.getTranslationSet();
         test.equal(set.size(), 0);
@@ -768,7 +670,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringTryControl = mp_resBundle->getLocString();');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString();');
 
         var set = cppf.getTranslationSet();
         test.equal(set.size(), 0);
@@ -786,7 +688,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringTryControl = mp_resBundle->ggetLocString(notification_getResBundle(), "OK");');
+        cppf.parse('m_localeStringYes  = mp_resBundle->ggetLocString();');
 
         var set = cppf.getTranslationSet();
         test.equal(set.size(), 0);
@@ -804,37 +706,42 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
         cppf.parse('        \n'+
-            '    bool ret = FALSE;\n' +
-            '    struct json_object *jobj=NULL, *subjobj=NULL, *btnjobj=NULL, *pramjobj=NULL, *aryjobj=NULL, *closejobj=NULL;\n' +
-            '    char msg[1024]={0,};\n' +
+            '    if (nlp_supported) {\n' +
+            '        i18n_msg = ResBundleAdaptor::Instance().getLocString("Voice recognition will be available by connecting TV to the network.") + "<br>\"" +\n' +
+            '        ResBundleAdaptor::Instance().getLocString("Channel 20 (channel number)") + "\"<br>\"" \n' +
+            '        ResBundleAdaptor::Instance().getLocString("Volume up/down") + "\"<br>\"" +\n' +
+            '        ResBundleAdaptor::Instance().getLocString("Brighten/dim the screen") + "\"<br>\"" +\n' +
             '\n' +
-            '    char* alert_btn= (char *)resBundle_getLocString(notification_getResBundle(), "OK");\n' +
-            '    char* alert_msg_line1= (char *)resBundle_getLocString(notification_getResBundle(), "The device cannot be connected to your TV.");\n' +
-            '    char* alert_msg_line2= (char *)resBundle_getLocString(notification_getResBundle(), "Please try again. If the issue persists, please restart your TV or check your device.");\n' +
+            '        ResBundleAdaptor::Instance().getLocString("Recommend me something to watch") + "\"<br>\"" +\n' +
+            '        ResBundleAdaptor::Instance().getLocString("Switch to the game console") + "\"";\n' +
+            '        i18n_yes    = ResBundleAdaptor::Instance().getLocString("Network settings");\n' +
+            '        i18n_no     = ResBundleAdaptor::Instance().getLocString("Cancel");\n' +
+            '    } else {\n' +
+            '    i18n_msg = ResBundleAdaptor::Instance().getLocString("Network is not connected. Do you want to go to Network Settings now to check the connection?");\n' +
             '\n' +
-            '    jobj = json_object_new_object();\n' +
-            '    aryjobj=json_object_new_array();\n' +
-            '\n');
+            '    i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes");\n' +
+            '    i18n_no     = ResBundleAdaptor::Instance().getLocString("No");\n' +
+            '}\n');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
 
         test.equal(set.size(), 3);
 
-        var r = set.getBySource("OK");
+        var r = set.getBySource("Yes");
         test.ok(r);
-        test.equal(r.getSource(), "OK");
-        test.equal(r.getKey(), "OK");
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
 
-        r = set.getBySource("The device cannot be connected to your TV.");
+        r = set.getBySource("Brighten/dim the screen");
         test.ok(r);
-        test.equal(r.getSource(), "The device cannot be connected to your TV.");
-        test.equal(r.getKey(), "The device cannot be connected to your TV.");
+        test.equal(r.getSource(), "Brighten/dim the screen");
+        test.equal(r.getKey(), "Brighten/dim the screen");
 
-        r = set.getBySource("Please try again. If the issue persists, please restart your TV or check your device.");
+        r = set.getBySource("Channel 20 (channel number)");
         test.ok(r);
-        test.equal(r.getSource(), "Please try again. If the issue persists, please restart your TV or check your device.");
-        test.equal(r.getKey(), "Please try again. If the issue persists, please restart your TV or check your device.");
+        test.equal(r.getSource(), "PChannel 20 (channel number)");
+        test.equal(r.getKey(), "Channel 20 (channel number)");
 
         test.done();
     },
@@ -844,7 +751,7 @@ module.exports.cppfile = {
 
         var cppf = new CppFile({
             project: p,
-            pathName: "./t1.c",
+            pathName: "./t1.cpp",
             type: cppft
         });
         test.ok(cppf);
@@ -852,19 +759,19 @@ module.exports.cppfile = {
         // should read the file
         cppf.extract();
         var set = cppf.getTranslationSet();
-        test.equal(set.size(), 29);
+        test.equal(set.size(), 12);
 
-        var r = set.getBySource("Decline");
+        var r = set.getBySource("Network settings");
         test.ok(r);
-        test.equal(r.getSource(), "Decline");
-        test.equal(r.getKey(), "Decline");
+        test.equal(r.getSource(), "Network settings");
+        test.equal(r.getKey(), "Network settings");
 
         var r = set.getBy({
-            reskey: "Do you want to accept this request?"
+            reskey: "Search 'OOO(search keyword)' on YouTube"
         });
         test.ok(r);
-        test.equal(r[0].getSource(), "Do you want to accept this request?");
-        test.equal(r[0].getKey(), "Do you want to accept this request?");
+        test.equal(r[0].getSource(), "Search 'OOO(search keyword)' on YouTube");
+        test.equal(r[0].getKey(), "Search 'OOO(search keyword)' on YouTube");
 
         test.done();
     },
@@ -886,33 +793,12 @@ module.exports.cppfile = {
         test.equal(set.size(), 0);
         test.done();
     },
-    testCppFileTest2: function(test) {
-        test.expect(5);
-
-        var cppf = new CppFile({
-            project: p,
-            pathName: "./t2.c",
-            type: cppft
-        });
-        test.ok(cppf);
-
-        cppf.extract();
-        var set = cppf.getTranslationSet();
-        test.equal(set.size(), 1);
-
-        var r = set.getBySource("Please say \"Stop\" when you see the desired channel.");
-        test.ok(r);
-        test.equal(r.getSource(), "Please say \"Stop\" when you see the desired channel.");
-        test.equal(r.getKey(), "Please say \"Stop\" when you see the desired channel.");
-
-        test.done();
-    },
     testCppFileTest3: function(test) {
         test.expect(2);
 
         var cppf = new CppFile({
             project: p,
-            pathName: "./t3.c",
+            pathName: "./t2.cpp",
             type: cppft
         });
         test.ok(cppf);

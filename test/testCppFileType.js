@@ -34,7 +34,7 @@ module.exports.cfiletype = {
     testCFileTypeConstructor: function(test) {
         test.expect(1);
 
-        var cft = new CFileType(p);
+        var cft = new CppFileType(p);
         test.ok(cft);
         test.done();
     },
@@ -42,7 +42,7 @@ module.exports.cfiletype = {
     testCFileTypeHandlesCFileTrue: function(test) {
         test.expect(2);
 
-        var cft = new CFileType(p);
+        var cft = new CppFileType(p);
         test.ok(cft);
         test.ok(cft.handles("foo.cpp"));
         test.done();
@@ -50,7 +50,7 @@ module.exports.cfiletype = {
     testCFileTypeHandlesCFileTrue2: function(test) {
         test.expect(2);
 
-        var cft = new CFileType(p);
+        var cft = new CppFileType(p);
         test.ok(cft);
         test.ok(cft.handles("foo/bar/test.cpp"));
         test.done();
@@ -59,7 +59,7 @@ module.exports.cfiletype = {
     testCFileTypeHandlesJSXFalse: function(test) {
         test.expect(2);
 
-        var cft = new CFileType(p);
+        var cft = new CppFileType(p);
         test.ok(cft);
         test.ok(!cft.handles("foo.jsx"));
         test.done();
@@ -67,7 +67,7 @@ module.exports.cfiletype = {
     testCFileTypeHandlesCppFalse: function(test) {
         test.expect(2);
 
-        var cft = new CFileType(p);
+        var cft = new CppFileType(p);
         test.ok(cft);
         test.ok(!cft.handles("foo.c"));
         test.done();
@@ -76,7 +76,7 @@ module.exports.cfiletype = {
     testCFileTypeHandlesFalseClose: function(test) {
         test.expect(2);
 
-        var cft = new CFileType(p);
+        var cft = new CppFileType(p);
         test.ok(cft);
         test.ok(!cft.handles("foocpp"));
         test.done();

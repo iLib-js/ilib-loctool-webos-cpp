@@ -42,6 +42,28 @@ var CppFile = function(props) {
 };
 
 /**
+ * Unescape the string to make the same string that would be
+ * in memory in the target programming language.
+ *
+ * @static
+ * @param {String} string the string to unescape
+ * @returns {String} the unescaped string
+ */
+CppFile.unescapeString = function(string) {
+    var unescaped = string;
+
+    unescaped = unescaped.
+        replace(/^\\\\/, "\\").             // unescape backslashes
+        replace(/([^\\])\\\\/g, "$1\\").
+        replace(/^\\'/, "'").               // unescape quotes
+        replace(/([^\\])\\'/g, "$1'").
+        replace(/^\\"/, '"').
+        replace(/([^\\])\\"/g, '$1"');
+
+    return unescaped;
+};
+
+/**
  * Use a key for the given string as it is. Not manipulating at all.
  *
  * @private
@@ -94,6 +116,8 @@ CppFile.prototype.parse = function(data) {
             var commentResult = reI18nComment.exec(line);
             comment = (commentResult && commentResult.length > 1) ? commentResult[2] : undefined;
 
+            match = CFile.unescapeString(match);
+
             var r = this.API.newResource({
                 resType: "string",
                 project: this.project.getProjectId(),
@@ -130,7 +154,8 @@ CppFile.prototype.parse = function(data) {
             var line = data.substring(reGetLocStringWithKey.lastIndex, last);
             var commentResult = reI18nComment.exec(line);
             comment = (commentResult && commentResult.length > 1) ? commentResult[2] : undefined;
-
+            match = CFile.unescapeString(match);
+            key = CFile.unescapeString(key);
             var r = this.API.newResource({
                 resType: "string",
                 project: this.project.getProjectId(),

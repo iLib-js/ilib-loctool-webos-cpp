@@ -43,7 +43,7 @@ var CppFileType = function(project) {
 };
 
 /**
- * Return true if the given path is a c file and is handled
+ * Return true if the given path is a c++ file and is handled
  * by the current file type.
  *
  * @param {String} pathName path to the file being questions
@@ -53,7 +53,7 @@ var CppFileType = function(project) {
 CppFileType.prototype.handles = function(pathName) {
     logger.debug("CppFileType handles " + pathName + "?");
     var ret = false;
-    if (pathName.length > 2 && pathName.substring(pathName.length - 2) === ".cpp") {
+    if (pathName.length > 4 && pathName.substring(pathName.length - 4) === ".cpp") {
         ret = true;
     } 
 
@@ -62,7 +62,7 @@ CppFileType.prototype.handles = function(pathName) {
 };
 
 CppFileType.prototype.name = function() {
-    return "C File Type";
+    return "C++ File Type";
 };
 
 /**
