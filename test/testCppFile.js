@@ -240,10 +240,10 @@ module.exports.cppfile = {
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        var r = set.getBySource('Try again.');
+        var r = set.getBySource("Try again.");
         test.ok(r);
-        test.equal(r.getSource(), 'Try again.');
-        test.equal(r.getKey(), 'Try again.');
+        test.equal(r.getSource(), "Try again.");
+        test.equal(r.getKey(), "Try again.");
 
         test.done();
     },
@@ -473,7 +473,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");m_localeStringNo   = mp_resBundle->getLocString("NO.key", NO");');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");m_localeStringNo   = mp_resBundle->getLocString("NO.key", "NO");');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -505,7 +505,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");   // i18n // photovideo-48');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");   // i18n // photovideo-48');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -593,7 +593,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");  m_localeStringNo   = mp_resBundle->getLocString("NO.key", NO"); m_bufStr = mp_resBundle->getLocString("Loading", Buffering is in progress..."); // i18n // photovideo-22');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");  m_localeStringNo   = mp_resBundle->getLocString("NO.key", NO"); m_bufStr = mp_resBundle->getLocString("Loading", Buffering is in progress..."); // i18n // photovideo-22');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -628,14 +628,14 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");m_localeStringYes  = mp_resBundle->getLocString("YES.key", YES");');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");');
         var set = cppf.getTranslationSet();
         test.ok(set);
 
         var r = set.getBySource("YES");
         test.ok(r);
         test.equal(r.getSource(), "YES");
-        test.equal(r.getKey(), "YES");
+        test.equal(r.getKey(), "YES.key");
 
         test.equal(set.size(), 1);
 
@@ -726,7 +726,7 @@ module.exports.cppfile = {
         var set = cppf.getTranslationSet();
         test.ok(set);
 
-        test.equal(set.size(), 3);
+        test.equal(set.size(), 11);
 
         var r = set.getBySource("Yes");
         test.ok(r);

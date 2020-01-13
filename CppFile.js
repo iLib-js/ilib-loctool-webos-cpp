@@ -55,10 +55,12 @@ CppFile.unescapeString = function(string) {
     unescaped = unescaped.
         replace(/^\\\\/, "\\").             // unescape backslashes
         replace(/([^\\])\\\\/g, "$1\\").
-        replace(/^\\'/, "'").               // unescape quotes
-        replace(/([^\\])\\'/g, "$1'").
         replace(/^\\"/, '"').
-        replace(/([^\\])\\"/g, '$1"');
+        replace(/([^\\])\\"/g, '$1"').
+        replace(/\\"/g, '"').
+        replace(/\\n/g, "\n").
+        replace(/\\t/g, "\t").
+        replace(/\\v/g, "\v");
 
     return unescaped;
 };
@@ -72,7 +74,7 @@ CppFile.unescapeString = function(string) {
  * @returns {String} a unique key for this string
  */
 CppFile.prototype.makeKey = function(source) {
-    return unescapeString(source);;
+    return CppFile.unescapeString(source);
 };
 
 CppFile.trimComment = function(commentString) {
@@ -81,13 +83,15 @@ CppFile.trimComment = function(commentString) {
     var trimComment = commentString.
         replace(/\s*\*\//, "").
         replace(/\s*\:\s*/, "").
-        replace(/\/\s*\**\s*/, "").
+        replace(/\/*\s*\**\s*/, "").
         replace(/\s*\*\s*/, "");
     return trimComment;
 }
 
-var reGetLocString = new RegExp(/\bgetLocString\(\s*"(.*)"\)/g);
-var reGetLocStringWithKey = new RegExp(/\bgetLocStringWithKey\((.*)\,\s*[\"](.*)[\"]\,\s*[\"](.*)*[\"]\)/g);
+var reGetLocString = new RegExp(/\bgetLocString\(\s*"((\\"|[^"])*)"\s*\)/g); // Case Please \"Stop\" it.
+var reGetLocString2 = new RegExp(/\bgetLocString\(\s*"(.*)\"\)/g); // Case Please "Stop" it.
+
+var reGetLocStringWithKey = new RegExp(/getLocString\(\s*"((\\"|[^"])*)",\s*"((\\"|[^"])*)"/g);
 var reI18nComment = new RegExp(/\/(\*|\/)\s*i18n\s*(.*)($|\*\/)/);
 
 /**
@@ -134,7 +138,7 @@ CppFile.prototype.parse = function(data) {
             this.set.add(r);
         } else {
             logger.warn("Warning: Bogus empty string in get string call: ");
-            logger.warn("... " + data.substring(result.index, reGetString.lastIndex) + " ...");
+            logger.warn("... " + data.substring(result.index, reGetLocString.lastIndex) + " ...");
         }
         result = reGetLocString.exec(data);
     }
@@ -142,9 +146,9 @@ CppFile.prototype.parse = function(data) {
     // To extract resBundle_getLocStringWithKey()
     reGetLocStringWithKey.lastIndex = 0; // just to be safe
     var result = reGetLocStringWithKey.exec(data);
-    while (result && result.length > 1 && result[2]) {
+    while (result && result.length > 1 && result[1]) {
         match = result[3];
-        key = result[2];
+        key = result[1];
 
         if (match && match.length) {
             logger.trace("Found string key: " + this.makeKey(match) + ", string: '" + match + "'");
@@ -172,9 +176,45 @@ CppFile.prototype.parse = function(data) {
             this.set.add(r);
         } else {
             logger.warn("Warning: Bogus empty string in get string call: ");
-            logger.warn("... " + data.substring(result.index, reGetString.lastIndex) + " ...");
+            logger.warn("... " + data.substring(result.index, reGetLocStringWithKey.lastIndex) + " ...");
         }
         result = reGetLocStringWithKey.exec(data);
+    }
+    reGetLocString2.lastIndex = 0; // just to be safe
+    var result = reGetLocString2.exec(data);
+    while (result && result.length > 1 && result[1]) {
+        match = result[1];
+
+        if (match && match.length) {
+            logger.trace("Found string key: " + this.makeKey(match) + ", string: '" + match + "'");
+
+            var last = data.indexOf('\n', reGetLocString2.lastIndex);
+            last = (last === -1) ? data.length : last;
+            var line = data.substring(reGetLocString2.lastIndex, last);
+            var commentResult = reI18nComment.exec(line);
+            comment = (commentResult && commentResult.length > 1) ? commentResult[2] : undefined;
+
+            match = CppFile.unescapeString(match);
+
+            var r = this.API.newResource({
+                resType: "string",
+                project: this.project.getProjectId(),
+                key: match,
+                sourceLocale: this.project.sourceLocale,
+                source: match,
+                autoKey: true,
+                pathName: this.pathName,
+                state: "new",
+                comment: CppFile.trimComment(comment),
+                datatype: this.type.datatype,
+                index: this.resourceIndex++
+            });
+            this.set.add(r);
+        } else {
+            logger.warn("Warning: Bogus empty string in get string call: ");
+            logger.warn("... " + data.substring(result.index, reGetLocString2.lastIndex) + " ...");
+        }
+        result = reGetLocString2.exec(data);
     }
 
 };
