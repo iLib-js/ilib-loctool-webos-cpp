@@ -5,7 +5,7 @@ if (nlp_supported) {
     ResBundleAdaptor::Instance().getLocString("Brighten/dim the screen") + "\"<br>\"" +
     ResBundleAdaptor::Instance().getLocString("Search 'OOO(search keyword)' on YouTube") + "\"<br>\"" +
     ResBundleAdaptor::Instance().getLocString("Recommend me something to watch") + "\"<br>\"" +
-    ResBundleAdaptor::Instance().getLocString("Switch to the game console") + "\"";
+    ResBundleAdaptor::Instance().getLocString("Switch to \"the game\" console") + "\"";
 
     i18n_yes    = ResBundleAdaptor::Instance().getLocString("Network settings");
     i18n_no     = ResBundleAdaptor::Instance().getLocString("Cancel");

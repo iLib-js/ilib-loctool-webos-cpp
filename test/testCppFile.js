@@ -116,7 +116,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('ResBundleAdaptor::Instance().getLocString("Yes")');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("Yes");');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -142,7 +142,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('ResBundleAdaptor::Instance().getLocString("Yes")');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("Yes");');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -165,7 +165,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('ResBundleAdaptor::Instance().getLocString(" Yes ")');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString(" Yes ");');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -188,7 +188,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('ResBundleAdaptor::Instance().getLocString("     Yes   ")');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("     Yes   ");');
 
 
         var set = cppf.getTranslationSet();
@@ -235,7 +235,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('ResBundleAdaptor::Instance().getLocString("Try again."));');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("Try again.");');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -248,7 +248,7 @@ module.exports.cppfile = {
         test.done();
     },
 
-    testCppFileParseCppSimple3: function(test) {
+    testCppFileParseMoreComplex: function(test) {
         test.expect(6);
 
         var cppf = new CppFile({
@@ -258,31 +258,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('ResBundleAdaptor::Instance().getLocString("Please say \"Stop\" when you see the desired channel.");  // i18n Detail description');
-
-        var set = cppf.getTranslationSet();
-        test.ok(set);
-
-        var r = set.getBySource('Please say \"Stop\" when you see the desired channel.');
-        test.ok(r);
-        test.equal(r.getSource(), 'Please say \"Stop\" when you see the desired channel.');
-        test.equal(r.getKey(), 'Please say \"Stop\" when you see the desired channel.');
-        test.equal(r.getComment(), "Detail description");
-
-        test.done();
-    },
-
-    testCppFileParseMoreComplex: function(test) {
-        test.expect(5);
-
-        var cppf = new CppFile({
-            project: p,
-            pathName: undefined,
-            type: cppft
-        });
-        test.ok(cppf);
-
-        cppf.parse('ResBundleAdaptor::Instance().getLocString("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");');
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");  // i18n // photovideo-22');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -291,7 +267,7 @@ module.exports.cppfile = {
         test.ok(r);
         test.equal(r.getSource(), "[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
         test.equal(r.getKey(), "[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
-
+        test.equal(r.getComment(), "photovideo-22");
         test.done();
     },
 
@@ -550,7 +526,7 @@ module.exports.cppfile = {
     },
 
     testCppFileParseMultiple2: function(test) {
-        test.expect(12);
+        test.expect(9);
 
         var cppf = new CppFile({
             project: p,
@@ -559,7 +535,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES"); m_localeStringNo   = mp_resBundle->getLocString("NO" ); m_localeStringExp = mp_resBundle->getLocString("Please say \"Stop\" when you see the desired channel.");  // i18n Detail description');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES"); m_localeStringNo   = mp_resBundle->getLocString("NO" ); // i18n Detail description');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -573,18 +549,13 @@ module.exports.cppfile = {
         test.ok(r);
         test.equal(r.getSource(), "NO");
         test.equal(r.getKey(), "NO");
-
-        var r = set.getBySource('Please say \"Stop\" when you see the desired channel.');
-        test.ok(r);
-        test.equal(r.getSource(), 'Please say \"Stop\" when you see the desired channel.');
-        test.equal(r.getKey(), 'Please say \"Stop\" when you see the desired channel.');
         test.equal(r.getComment(), "Detail description");
 
         test.done();
     },
 
     testCppFileParseMultipleWithKey: function(test) {
-        test.expect(11);
+        test.expect(10);
 
         var cppf = new CppFile({
             project: p,
@@ -593,7 +564,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");  m_localeStringNo   = mp_resBundle->getLocString("NO.key", NO"); m_bufStr = mp_resBundle->getLocString("Loading", Buffering is in progress..."); // i18n // photovideo-22');
+        cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");  m_localeStringNo   = mp_resBundle->getLocString("NO.key", "NO"); m_bufStr = mp_resBundle->getLocString("Loading", "Buffering is in progress...");');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -613,7 +584,6 @@ module.exports.cppfile = {
         test.equal(r[0].getSource(), "NO");
         test.ok(r[0].getAutoKey());
         test.equal(r[0].getKey(), "NO.key");
-        test.equal(r[0].getComment(), "photovideo-22");
 
         test.done();
     },
@@ -747,7 +717,7 @@ module.exports.cppfile = {
     },
 
     testCppFileExtractFile: function(test) {
-        test.expect(8);
+        test.expect(11);
 
         var cppf = new CppFile({
             project: p,
@@ -772,6 +742,50 @@ module.exports.cppfile = {
         test.ok(r);
         test.equal(r[0].getSource(), "Search 'OOO(search keyword)' on YouTube");
         test.equal(r[0].getKey(), "Search 'OOO(search keyword)' on YouTube");
+
+        var r = set.getBy({
+            reskey: "Switch to \"the game\" console"
+        });
+        test.ok(r);
+        test.equal(r[0].getSource(), "Switch to \"the game\" console");
+        test.equal(r[0].getKey(), "Switch to \"the game\" console");
+
+        test.done();
+    },
+
+    testCppFileExtractFile2: function(test) {
+        test.expect(11);
+
+        var cppf = new CppFile({
+            project: p,
+            pathName: "./t2.cpp",
+            type: cppft
+        });
+        test.ok(cppf);
+
+        // should read the file
+        cppf.extract();
+        var set = cppf.getTranslationSet();
+        test.equal(set.size(), 3);
+
+        var r = set.getBySource("Your\n Welcome");
+        test.ok(r);
+        test.equal(r.getSource(), "Your\n Welcome");
+        test.equal(r.getKey(), "Your\n Welcome");
+
+        var r = set.getBy({
+            reskey: "No\n \t Thanks"
+        });
+        test.ok(r);
+        test.equal(r[0].getSource(), "No\n \t Thanks");
+        test.equal(r[0].getKey(), "No\n \t Thanks");
+
+        var r = set.getBy({
+            reskey: "Yes \"yes\""
+        });
+        test.ok(r);
+        test.equal(r[0].getSource(), "Yes \"yes\"");
+        test.equal(r[0].getKey(), "Yes \"yes\"");
 
         test.done();
     },
@@ -798,7 +812,7 @@ module.exports.cppfile = {
 
         var cppf = new CppFile({
             project: p,
-            pathName: "./t2.cpp",
+            pathName: "./t3.cpp",
             type: cppft
         });
         test.ok(cppf);
