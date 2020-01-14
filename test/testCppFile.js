@@ -80,6 +80,19 @@ module.exports.cppfile = {
         test.done();
     },
 
+    testCppFileMakeKey2: function(test) {
+        test.expect(2);
+
+        var cppf = new CppFile({
+            project: p,
+            pathName: undefined,
+            type: cppft
+        });
+        test.ok(cppf);
+        test.equal(cppf.makeKey("This is a \t\"test\""), "This is a \t\"test\"");
+        test.done();
+    },
+
     testCppFileMakeKeyWithSpace: function(test) {
         test.expect(2);
 
