@@ -43,11 +43,11 @@ var CppFileType = function(project) {
 };
 
 /**
- * Return true if the given path is a c++ file and is handled
+ * Return true if the given path is a C++ file and is handled
  * by the current file type.
  *
  * @param {String} pathName path to the file being questions
- * @returns {boolean} true if the path is a java file, or false
+ * @returns {boolean} true if the path is a C++ file, or false
  * otherwise
  */
 CppFileType.prototype.handles = function(pathName) {
@@ -162,7 +162,7 @@ CppFileType.prototype.getResourceTypes = function() {
 
 /**
  * Return the name of the node module that implements the resource file type, or
- * the path to a javascript file that implements the resource filetype.
+ * the path to a C++ file that implements the resource filetype.
  * @returns {Function|undefined} node module name or path, or undefined if this file type does not
  * need resource files
  */

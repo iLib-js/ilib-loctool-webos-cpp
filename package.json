@@ -15,7 +15,8 @@
         "resources",
         "locale",
         "translation",
-        "cpp"
+        "cpp",
+        "c++"
     ],
     "author": {
         "name": "Goun Lee",

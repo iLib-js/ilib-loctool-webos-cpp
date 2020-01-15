@@ -88,8 +88,8 @@ CppFile.trimComment = function(commentString) {
     return trimComment;
 }
 
-var reGetLocString = new RegExp(/\bgetLocString\("((\\"|[^"])*)"\s*\)/g);
-var reGetLocStringWithKey = new RegExp(/\bgetLocString\(\s*"(.[^);]*)"\s*,\s*"(.[^);]*)"(\s*\))/g);
+var reGetLocString = new RegExp(/\bgetLocString\(\s*"((\\"|[^"])*)"\s*\)/g);
+var reGetLocStringWithKey = new RegExp(/\bgetLocString\(\s*"((\\"|[^"])*)"\s*,\s*"((\\"|[^"])*)"\)/g);
 var reI18nComment = new RegExp(/\/(\*|\/)\s*i18n\s*(.*)($|\*\/)/);
 
 /**
@@ -144,8 +144,8 @@ CppFile.prototype.parse = function(data) {
     // To extract resBundle_getLocStringWithKey()
     reGetLocStringWithKey.lastIndex = 0; // just to be safe
     var result = reGetLocStringWithKey.exec(data);
-    while (result && result.length > 1 && result[1]) {
-        match = result[2];
+    while (result && result.length > 1 && result[1] && result[3]) {
+        match = result[3];
         key = result[1];
 
         if (match && match.length) {
@@ -182,7 +182,7 @@ CppFile.prototype.parse = function(data) {
 };
 
 /**
- * Extract all the localizable strings from the java file and add them to the
+ * Extract all the localizable strings from the C++ file and add them to the
  * project's translation set.
  */
 CppFile.prototype.extract = function() {
@@ -201,10 +201,10 @@ CppFile.prototype.extract = function() {
 };
 
 /**
- * Return the set of resources found in the current JavaScript file.
+ * Return the set of resources found in the current C++ file.
  *
  * @returns {TranslationSet} The set of resources found in the
- * current JavaScript file.
+ * current C++ file.
  */
 CppFile.prototype.getTranslationSet = function() {
     return this.set;
