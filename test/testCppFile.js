@@ -781,24 +781,24 @@ module.exports.cppfile = {
         var set = cppf.getTranslationSet();
         test.equal(set.size(), 3);
 
-        var r = set.getBySource("Your\n Welcome");
+        var r = set.getBySource("You're\n Welcome.");
         test.ok(r);
-        test.equal(r.getSource(), "Your\n Welcome");
-        test.equal(r.getKey(), "Your\n Welcome");
+        test.equal(r.getSource(), "You're\n Welcome.");
+        test.equal(r.getKey(), "You're\n Welcome.");
 
         var r = set.getBy({
-            reskey: "No\n \t Thanks"
+            reskey: "No,\n \t Thanks."
         });
         test.ok(r);
-        test.equal(r[0].getSource(), "No\n \t Thanks");
-        test.equal(r[0].getKey(), "No\n \t Thanks");
+        test.equal(r[0].getSource(), "No,\n \t Thanks.");
+        test.equal(r[0].getKey(), "No,\n \t Thanks.");
 
         var r = set.getBy({
-            reskey: "Yes \"yes\""
+            reskey: "Yes \"yes\"."
         });
         test.ok(r);
-        test.equal(r[0].getSource(), "Yes \"yes\"");
-        test.equal(r[0].getKey(), "Yes \"yes\"");
+        test.equal(r[0].getSource(), "Yes \"yes\".");
+        test.equal(r[0].getKey(), "Yes \"yes\".");
 
         test.done();
     },
