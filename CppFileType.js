@@ -16,25 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-var fs = require("fs");
-var ilib = require("ilib");
-var Locale = require("ilib/lib/Locale.js");
+var path = require("path");
 var log4js = require("log4js");
-
 var CppFile = require("./CppFile.js");
 var JsonResourceFileType = require("ilib-loctool-webos-json-resource");
-
+log4js.configure(path.dirname(module.filename) + '/log4js.json');
 var logger = log4js.getLogger("loctool.plugin.CppFileType");
 
 var CppFileType = function(project) {
     this.type = "cpp";
     this.datatype = "cpp";
     this.resourceType = "json";
-
     this.project = project;
     this.API = project.getAPI();
-
     this.extensions = [ ".cpp"];
 
     this.extracted = this.API.newTranslationSet(project.getSourceLocale());
