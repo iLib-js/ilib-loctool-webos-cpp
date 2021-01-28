@@ -870,5 +870,5 @@ module.exports.cppfile = {
         test.ok(set);
         test.equal(set.size(), 0);
         test.done();
-    },
+    }
 };
