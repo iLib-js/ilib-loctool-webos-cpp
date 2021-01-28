@@ -1,7 +1,7 @@
 /*
  * testCppFile.js - test the C++ file handler object.
  *
- * Copyright © 2020, JEDLSoft
+ * Copyright © 2020-2021, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ module.exports.cppfile = {
 
         var cppf = new CppFile({
             project: p,
-            pathName: "./testfiles/t1.c",
+            pathName: "./testfiles/t1.cpp",
             type: cppft
         });
 
@@ -390,7 +390,7 @@ module.exports.cppfile = {
         });
         test.ok(cppf);
 
-        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n  /** Connect WiSA Dongle **/ ');
+        cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n  Connect WiSA Dongle');
 
         var set = cppf.getTranslationSet();
         test.ok(set);
@@ -833,8 +833,42 @@ module.exports.cppfile = {
         cppf.extract();
 
         var set = cppf.getTranslationSet();
-        test.equal(set.size(), 0);
+        test.equal(set.size(), 1);
 
+        test.done();
+    },
+    testCppFileNotParseCommentLine: function(test) {
+        test.expect(3);
+
+        var cppf = new CppFile({
+            project: p,
+            pathName: undefined,
+            type: cppft
+        });
+        test.ok(cppf);
+
+        cppf.parse('// ResBundleAdaptor::Instance().getLocString(" Yes ");\n');
+
+        var set = cppf.getTranslationSet();
+        test.ok(set);
+        test.equal(set.size(), 0);
+        test.done();
+    },
+    testCppFileNotParseCommentLine2: function(test) {
+        test.expect(3);
+
+        var cppf = new CppFile({
+            project: p,
+            pathName: undefined,
+            type: cppft
+        });
+        test.ok(cppf);
+
+        cppf.parse('/* ResBundleAdaptor::Instance().getLocString("NO"); */\n');
+
+        var set = cppf.getTranslationSet();
+        test.ok(set);
+        test.equal(set.size(), 0);
         test.done();
     }
 };
