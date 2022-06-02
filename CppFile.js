@@ -1,7 +1,7 @@
 /*
  * CppFile.js - plugin to extract resources from a C++ source code file
  *
- * Copyright (c) 2020-2021, JEDLSoft
+ * Copyright (c) 2020-2022, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,6 @@
 
 var fs = require("fs");
 var path = require("path");
-var log4js = require("log4js");
-log4js.configure(path.dirname(module.filename) + '/log4js.json');
-var logger = log4js.getLogger("loctool.plugin.CppFile");
 
 /**
  * Create a new java file with the given path name and within
@@ -37,7 +34,7 @@ var CppFile = function(props) {
     this.pathName = props.pathName;
     this.type = props.type;
     this.API = props.project.getAPI();
-
+    this.logger = this.API.getLogger("loctool.plugin.webOSCppFile");
     this.set = this.API.newTranslationSet(this.project ? this.project.sourceLocale : "zxx-XX");
 };
 
@@ -114,7 +111,7 @@ var reI18nComment = new RegExp(/\/(\*|\/)\s*i18n\s*(.*)($|\*\/)/);
  * @param {String} data the string to parse
  */
 CppFile.prototype.parse = function(data) {
-    logger.debug("Extracting strings from " + this.pathName);
+    this.logger.debug("Extracting strings from " + this.pathName);
 
     data = CppFile.removeCommentLines(data);
     this.resourceIndex = 0;
@@ -128,7 +125,7 @@ CppFile.prototype.parse = function(data) {
         match = result[1];
 
         if (match && match.length) {
-            logger.trace("Found string key: " + this.makeKey(match) + ", string: '" + match + "'");
+            this.logger.trace("Found string key: " + this.makeKey(match) + ", string: '" + match + "'");
 
             var last = data.indexOf('\n', reGetLocString.lastIndex);
             last = (last === -1) ? data.length : last;
@@ -153,8 +150,8 @@ CppFile.prototype.parse = function(data) {
             });
             this.set.add(r);
         } else {
-            logger.warn("Warning: Bogus empty string in get string call: ");
-            logger.warn("... " + data.substring(result.index, reGetLocString.lastIndex) + " ...");
+            this.logger.warn("Warning: Bogus empty string in get string call: ");
+            this.logger.warn("... " + data.substring(result.index, reGetLocString.lastIndex) + " ...");
         }
         result = reGetLocString.exec(data);
     }
@@ -167,7 +164,7 @@ CppFile.prototype.parse = function(data) {
         key = result[1];
 
         if (match && match.length) {
-            logger.trace("Found string key: " + this.makeKey(match) + ", string: '" + match + "'");
+            this.logger.trace("Found string key: " + this.makeKey(match) + ", string: '" + match + "'");
 
             var last = data.indexOf('\n', reGetLocStringWithKey.lastIndex);
             last = (last === -1) ? data.length : last;
@@ -191,8 +188,8 @@ CppFile.prototype.parse = function(data) {
             });
             this.set.add(r);
         } else {
-            logger.warn("Warning: Bogus empty string in get string call: ");
-            logger.warn("... " + data.substring(result.index, reGetLocStringWithKey.lastIndex) + " ...");
+            this.logger.warn("Warning: Bogus empty string in get string call: ");
+            this.logger.warn("... " + data.substring(result.index, reGetLocStringWithKey.lastIndex) + " ...");
         }
         result = reGetLocStringWithKey.exec(data);
     }
@@ -204,7 +201,7 @@ CppFile.prototype.parse = function(data) {
  * project's translation set.
  */
 CppFile.prototype.extract = function() {
-    logger.debug("Extracting strings from " + this.pathName);
+    this.logger.debug("Extracting strings from " + this.pathName);
     if (this.pathName) {
         var p = path.join(this.project.root, this.pathName);
         try {
@@ -213,7 +210,7 @@ CppFile.prototype.extract = function() {
                 this.parse(data);
             }
         } catch (e) {
-            logger.warn("Could not read file: " + p);
+            this.logger.warn("Could not read file: " + p);
         }
     }
 };
