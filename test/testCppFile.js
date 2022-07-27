@@ -833,7 +833,7 @@ module.exports.cppfile = {
         cppf.extract();
 
         var set = cppf.getTranslationSet();
-        test.equal(set.size(), 1);
+        test.equal(set.size(), 3);
 
         test.done();
     },
