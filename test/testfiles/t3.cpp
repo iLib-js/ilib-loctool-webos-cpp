@@ -5,3 +5,12 @@
 */
 
 /*test4 = ResBundleAdaptor::Instance().getLocString("No"); */test5 = ResBundleAdaptor::Instance().getLocString("Yes \"yes\".");
+
+/**********************/
+/* check type */
+/**********************/
+test6 = resBundle->getLocString("More 1");
+/**********************/
+/* check appid */
+/**********************/
+test7 = resBundle->getLocString("More 2");

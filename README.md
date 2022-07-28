@@ -2,6 +2,9 @@
 ilib-webos-loctool-cpp is a plugin for the loctool allows it to read and localize cpp files. This plugins is optimized for webOS platform.
 
 ## Release Notes
+v1.1.7
+* Fixed an issue where strings are not extracted due to incorrect deletion of commented lines.
+
 v1.1.6
 * Updated dependencies.(loctool: 2.16.3)
 * Used the logger provided by the loctool instead of using log4js directly.
