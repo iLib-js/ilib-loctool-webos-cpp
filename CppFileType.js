@@ -32,6 +32,10 @@ var CppFileType = function(project) {
     this.extracted = this.API.newTranslationSet(project.getSourceLocale());
     this.newres = this.API.newTranslationSet(project.getSourceLocale());
     this.pseudo = this.API.newTranslationSet(project.getSourceLocale());
+
+    if (project.localeMap) {
+        Utils.setBaseLocale(project.localeMap);
+    }
 };
 
 /**
@@ -80,10 +84,6 @@ CppFileType.prototype.write = function(translations, locales) {
         translationLocales = locales.filter(function(locale) {
             return locale !== this.project.sourceLocale && locale !== this.project.pseudoLocale;
         }.bind(this));
-
-    if (this.project.localeMap) {
-        Utils.setBaseLocale(this.project.localeMap);
-    }
 
     for (var i = 0; i < resources.length; i++) {
         res = resources[i];
