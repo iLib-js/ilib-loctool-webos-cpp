@@ -32,6 +32,10 @@ var CppFileType = function(project) {
     this.extracted = this.API.newTranslationSet(project.getSourceLocale());
     this.newres = this.API.newTranslationSet(project.getSourceLocale());
     this.pseudo = this.API.newTranslationSet(project.getSourceLocale());
+
+    if (Object.keys(project.localeMap).length > 0) {
+        Utils.setBaseLocale(project.localeMap);
+    }
 };
 
 /**
