@@ -16,12 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+var fs = require("fs");
 var path = require("path");
 var CppFile = require("./CppFile.js");
 var JsonResourceFileType = require("ilib-loctool-webos-json-resource");
 var Utils = require("loctool/lib/utils.js")
-var fs = require("fs");
-var path = require("path");
+var ResourceString = require("loctool/lib/ResourceString.js");
 
 var CppFileType = function(project) {
     this.type = "cpp";
@@ -132,9 +133,7 @@ CppFileType.prototype.write = function(translations, locales) {
                 db.getResourceByCleanHashKey(res.cleanHashKeyForTranslation(locale), function(err, translated) {
                     var r = translated;
                     if (!translated && this.isloadCommonData) {
-                        var manipulateKey = res.cleanHashKeyForTranslation(locale).
-                                            replace(res.getProject(), this.commonPrjName).
-                                            replace("_" + res.getDataType() + "_", "_" + this.commonPrjType + "_");
+                        var manipulateKey = ResourceString.hashKey(this.commonPrjName, locale, res.getKey(), this.commonPrjType, res.getFlavor());
                         db.getResourceByCleanHashKey(manipulateKey, function(err, translated) {
                             if (translated) {
                                 translated.project = res.getProject();
