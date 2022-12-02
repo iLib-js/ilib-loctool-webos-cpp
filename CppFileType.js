@@ -16,10 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+var fs = require("fs");
 var path = require("path");
 var CppFile = require("./CppFile.js");
 var JsonResourceFileType = require("ilib-loctool-webos-json-resource");
 var Utils = require("loctool/lib/utils.js")
+var ResourceString = require("loctool/lib/ResourceString.js");
 
 var CppFileType = function(project) {
     this.type = "cpp";
@@ -28,6 +31,7 @@ var CppFileType = function(project) {
     this.project = project;
     this.API = project.getAPI();
     this.extensions = [ ".cpp"];
+    this.isloadCommonData = false;
     this.logger = this.API.getLogger("loctool.plugin.webOSCppFileType");
     this.extracted = this.API.newTranslationSet(project.getSourceLocale());
     this.newres = this.API.newTranslationSet(project.getSourceLocale());
@@ -35,6 +39,10 @@ var CppFileType = function(project) {
 
     if (Object.keys(project.localeMap).length > 0) {
         Utils.setBaseLocale(project.localeMap);
+    }
+
+    if (project.settings.webos && project.settings.webos["commonXliff"]){
+        this.commonPath = project.settings.webos["commonXliff"];
     }
 };
 
@@ -87,6 +95,11 @@ CppFileType.prototype.write = function(translations, locales) {
             return locale !== this.project.sourceLocale && locale !== this.project.pseudoLocale;
         }.bind(this));
 
+    if (this.commonPath && !this.isloadCommonData) {
+        this._loadCommonXliff(translationLocales);
+        this.isloadCommonData = true;
+    }
+
     if (mode === "localize") {
         for (var i = 0; i < resources.length; i++) {
             res = resources[i];
@@ -119,7 +132,41 @@ CppFileType.prototype.write = function(translations, locales) {
     
                 db.getResourceByCleanHashKey(res.cleanHashKeyForTranslation(locale), function(err, translated) {
                     var r = translated;
-                    if (!translated && customInheritLocale){
+                    if (!translated && this.isloadCommonData) {
+                        var manipulateKey = ResourceString.hashKey(this.commonPrjName, locale, res.getKey(), this.commonPrjType, res.getFlavor());
+                        db.getResourceByCleanHashKey(manipulateKey, function(err, translated) {
+                            if (translated) {
+                                translated.project = res.getProject();
+                                translated.datatype=res.getDataType();
+                                file = resFileType.getResourceFile(locale);
+                                file.addResource(translated);
+                            } else if(!translated && customInheritLocale){
+                                db.getResourceByCleanHashKey(res.cleanHashKeyForTranslation(customInheritLocale), function(err, translated) {
+                                    if (translated){
+                                        translated.setTargetLocale(locale);
+                                        file = resFileType.getResourceFile(locale);
+                                        file.addResource(translated);
+                                    } else {
+                                        var newres = res.clone();
+                                        newres.setTargetLocale(locale);
+                                        newres.setTarget((r && r.getTarget()) || res.getSource());
+                                        newres.setState("new");
+                                        newres.setComment(note);
+                                        this.newres.add(newres);
+                                        this.logger.trace("No translation for " + res.reskey + " to " + locale);
+                                    }
+                                }.bind(this));
+                            } else {
+                                var newres = res.clone();
+                                newres.setTargetLocale(locale);
+                                newres.setTarget((r && r.getTarget()) || res.getSource());
+                                newres.setState("new");
+                                newres.setComment(note);
+                                this.newres.add(newres);
+                                this.logger.trace("No translation for " + res.reskey + " to " + locale);
+                            }
+                        }.bind(this));
+                    } else if (!translated && customInheritLocale){
                         db.getResourceByCleanHashKey(res.cleanHashKeyForTranslation(customInheritLocale), function(err, translated) {
                             if (translated) {
                                 translated.setTargetLocale(locale);
@@ -187,6 +234,31 @@ CppFileType.prototype.write = function(translations, locales) {
             this.logger.trace("Added " + res.reskey + " to " + file.pathName);
         }
     }
+};
+
+CppFileType.prototype._loadCommonXliff = function() {
+    if (fs.existsSync(this.commonPath)){
+        var list = fs.readdirSync(this.commonPath);
+    }
+    list.forEach(function(file){
+        var commonXliff = this.API.newXliff({
+            sourceLocale: this.project.getSourceLocale(),
+            project: this.project.getProjectId(),
+            path: this.commonPath,
+        });
+        var pathName = path.join(this.commonPath, file);
+        var data = fs.readFileSync(pathName, "utf-8");
+        commonXliff.deserialize(data);
+        var resources = commonXliff.getResources();
+        var localts = this.project.getRepository().getTranslationSet();
+        if (resources.length > 0){
+            this.commonPrjName = resources[0].getProject();
+            this.commonPrjType = resources[0].getDataType();
+            resources.forEach(function(res){
+                localts.add(res);
+            }.bind(this));
+        }
+    }.bind(this));
 };
 
 CppFileType.prototype.newFile = function(path) {
