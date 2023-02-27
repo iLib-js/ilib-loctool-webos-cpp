@@ -1,6 +1,6 @@
 {
     "name": "ilib-loctool-webos-cpp",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "main": "./CppFileType.js",
     "description": "A loctool plugin that knows how to process C++ files",
     "license": "Apache-2.0",
@@ -52,7 +52,7 @@
     },
     "devDependencies": {
         "assertextras": "^1.1.0",
-        "loctool": "2.20.0",
+        "loctool": "2.20.2",
         "nodeunit": "^0.11.3"
     }
 }
