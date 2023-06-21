@@ -1,7 +1,7 @@
 /*
  * testCppFile.js - test the C++ file handler object.
  *
- * Copyright (c) 2020-2021, JEDLSoft
+ * Copyright (c) 2020-2021,2023 JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ module.exports.cppfile = {
         test.ok(cppf);
         test.done();
     },
-
     testCppFileConstructorParams: function(test) {
         test.expect(1);
 
@@ -54,7 +53,6 @@ module.exports.cppfile = {
         test.ok(cppf);
         test.done();
     },
-
     testCppFileConstructorNoFile: function(test) {
         test.expect(1);
 
@@ -66,7 +64,6 @@ module.exports.cppfile = {
         test.ok(cppf);
         test.done();
     },
-
     testCppFileMakeKey: function(test) {
         test.expect(2);
 
@@ -79,7 +76,6 @@ module.exports.cppfile = {
         test.equal(cppf.makeKey("This is a test"), "This is a test");
         test.done();
     },
-
     testCppFileMakeKey2: function(test) {
         test.expect(2);
 
@@ -92,7 +88,6 @@ module.exports.cppfile = {
         test.equal(cppf.makeKey("This is a \t\"test\""), "This is a \t\"test\"");
         test.done();
     },
-
     testCppFileMakeKeyWithSpace: function(test) {
         test.expect(2);
 
@@ -105,7 +100,6 @@ module.exports.cppfile = {
         test.equal(cppf.makeKey(" This is a test "), " This is a test ");
         test.done();
     },
-
     testCppFileMakeKeyWithSpaces: function(test) {
         test.expect(2);
 
@@ -118,7 +112,30 @@ module.exports.cppfile = {
         test.equal(cppf.makeKey("   This is a test   "), "   This is a test   ");
         test.done();
     },
+    testCppFileParseSingleQuote: function(test) {
+        test.expect(6);
 
+        var cppf = new CppFile({
+            project: p,
+            pathName: undefined,
+            type: cppft
+        });
+        test.ok(cppf);
+        cppf.parse('ResBundleAdaptor::Instance().getLocString("Don\'t save");');
+
+        var set = cppf.getTranslationSet();
+        test.ok(set);
+        test.equal(set.size(), 1);
+
+        var r = set.getBy({
+            reskey: "Don't save"
+        });
+        test.ok(r);
+
+        test.equal(r[0].getSource(), "Don't save");
+        test.equal(r[0].getKey(), "Don't save");
+        test.done();
+    },
     testCppFileParseSimpleGetByKey: function(test) {
         test.expect(5);
 
@@ -144,7 +161,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseSimpleGetBySource: function(test) {
         test.expect(5);
 
@@ -167,7 +183,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseSimpleGetBySourceWithSpace: function(test) {
         test.expect(5);
 
@@ -190,7 +205,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseSimpleGetBySourceWithSpaces: function(test) {
         test.expect(5);
 
@@ -214,7 +228,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseCppSimple: function(test) {
         test.expect(5);
 
@@ -237,7 +250,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseCppSimple2: function(test) {
         test.expect(5);
 
@@ -260,7 +272,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseMoreComplex: function(test) {
         test.expect(6);
 
@@ -283,7 +294,6 @@ module.exports.cppfile = {
         test.equal(r.getComment(), "photovideo-22");
         test.done();
     },
-
     testCppFileParseSimpleWithTranslatorComment: function(test) {
         test.expect(6);
 
@@ -307,7 +317,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseSimpleWithTranslatorComment2: function(test) {
         test.expect(6);
 
@@ -331,7 +340,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseSimpleWithTranslatorComment3: function(test) {
         test.expect(6);
 
@@ -355,7 +363,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseSimpleWithTranslatorComment4: function(test) {
         test.expect(6);
 
@@ -379,7 +386,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseSimpleWithTranslatorComment5: function(test) {
         test.expect(6);
 
@@ -403,7 +409,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseSimpleWithTranslatorComment6: function(test) {
         test.expect(6);
 
@@ -427,7 +432,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseWithKey: function(test) {
         test.expect(5);
 
@@ -451,7 +455,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseWithKey2: function(test) {
         test.expect(8);
 
@@ -483,7 +486,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseWithKeyandComment: function(test) {
         test.expect(6);
 
@@ -509,7 +511,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseMultiple: function(test) {
         test.expect(8);
 
@@ -537,7 +538,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseMultiple2: function(test) {
         test.expect(9);
 
@@ -566,7 +566,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseMultipleWithKey: function(test) {
         test.expect(10);
 
@@ -600,7 +599,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseWithDups: function(test) {
         test.expect(6);
 
@@ -624,7 +622,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseBogusNonStringParam: function(test) {
         test.expect(2);
 
@@ -642,7 +639,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseEmptyParams: function(test) {
         test.expect(2);
 
@@ -660,7 +656,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParseWholeWord: function(test) {
         test.expect(2);
 
@@ -678,7 +673,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileParsePunctuationBeforeRB: function(test) {
         test.expect(12);
 
@@ -728,7 +722,6 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileExtractFile: function(test) {
         test.expect(11);
 
@@ -765,9 +758,8 @@ module.exports.cppfile = {
 
         test.done();
     },
-
     testCppFileExtractFile2: function(test) {
-        test.expect(11);
+        test.expect(14);
 
         var cppf = new CppFile({
             project: p,
@@ -779,7 +771,7 @@ module.exports.cppfile = {
         // should read the file
         cppf.extract();
         var set = cppf.getTranslationSet();
-        test.equal(set.size(), 3);
+        test.equal(set.size(), 4);
 
         var r = set.getBySource("You're\n Welcome.");
         test.ok(r);
@@ -800,9 +792,15 @@ module.exports.cppfile = {
         test.equal(r[0].getSource(), "Yes \"yes\".");
         test.equal(r[0].getKey(), "Yes \"yes\".");
 
+        var r = set.getBy({
+            reskey: "Do you want to change the settings from \'Digital Sound Output\' to \'Pass Through\' to minimize audio delay while playing game?"
+        });
+        test.ok(r);
+        test.equal(r[0].getSource(), "Do you want to change the settings from 'Digital Sound Output' to 'Pass Through' to minimize audio delay while playing game?");
+        test.equal(r[0].getKey(), "Do you want to change the settings from 'Digital Sound Output' to 'Pass Through' to minimize audio delay while playing game?");
+
         test.done();
     },
-
     testCppFileExtractUndefinedFile: function(test) {
         test.expect(2);
 
