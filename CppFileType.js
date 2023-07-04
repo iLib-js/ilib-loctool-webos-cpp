@@ -37,6 +37,26 @@ var CppFileType = function(project) {
     this.newres = this.API.newTranslationSet(project.getSourceLocale());
     this.pseudo = this.API.newTranslationSet(project.getSourceLocale());
 
+    // generate all the pseudo bundles we'll need
+    if (project.pseudoLocale && Array.isArray(project.pseudoLocale)) {
+        this.pseudos = {};
+        project.pseudoLocale && project.pseudoLocale.forEach(function(locale) {
+            var pseudo = this.API.getPseudoBundle(locale, this, project);
+            if (pseudo) {
+                this.pseudos[locale] = pseudo;
+            }
+        }.bind(this));
+    }
+    if (project.pseudoLocales && typeof project.pseudoLocales == 'object') {
+        this.pseudos = {};
+        for (locale in project.pseudoLocales) {
+            var pseudo = this.API.getPseudoBundle(locale, this, project);
+            if (pseudo) {
+                this.pseudos[locale] = pseudo;
+            }
+        }
+    }
+
     if (Object.keys(project.localeMap).length > 0) {
         Utils.setBaseLocale(project.localeMap);
     }
@@ -403,6 +423,24 @@ CppFileType.prototype.getNew = function() {
  */
 CppFileType.prototype.getPseudo = function() {
     return this.pseudo;
+};
+
+/**
+ * Ensure that all resources collected so far have a pseudo translation.
+ */
+ CppFileType.prototype.generatePseudo = function(locale, pb) {
+    var resources = this.extracted.getBy({
+        sourceLocale: pb.getSourceLocale()
+    });
+    this.logger.trace("Found " + resources.length + " source resources for " + pb.getSourceLocale());
+
+    resources.forEach(function(resource) {
+        this.logger.trace("Generating pseudo for " + resource.getKey());
+        var res = resource.generatePseudo(locale, pb);
+        if (res && res.getSource() !== res.getTarget()) {
+            this.pseudo.add(res);
+        }
+    }.bind(this));
 };
 
 /**
