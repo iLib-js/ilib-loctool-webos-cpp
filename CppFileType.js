@@ -125,9 +125,16 @@ CppFileType.prototype.write = function(translations, locales) {
             return locale !== this.project.sourceLocale && locale !== this.project.pseudoLocale;
         }.bind(this));
 
-    if (this.commonPath && !this.isloadCommonData) {
-        this._loadCommonXliff();
+    if ((typeof(translations) !== 'undefined') && (typeof(translations.getProjects()) !== 'undefined') && (translations.getProjects().indexOf("common") !== -1)) {
         this.isloadCommonData = true;
+    }
+    if (this.commonPath) {
+        if (!this.isloadCommonData) {
+            this._loadCommonXliff();
+            this.isloadCommonData = true;
+        } else {
+            this._addComonDatatoTranslationSet(translations);
+        }
     }
 
     if (mode === "localize") {
@@ -353,6 +360,18 @@ CppFileType.prototype._loadCommonXliff = function() {
         }.bind(this));
     }
 };
+
+CppFileType.prototype._addComonDatatoTranslationSet = function(tsdata) {
+    var prots = this.project.getRepository().getTranslationSet();
+    var commonts = tsdata.getBy({project: "common"});
+    if (commonts.length > 0){
+        this.commonPrjName = commonts[0].getProject();
+        this.commonPrjType = commonts[0].getDataType();
+        commonts.forEach(function(ts){
+            prots.add(ts);
+        }.bind(this));
+    }
+}
 
 CppFileType.prototype.newFile = function(path) {
     return new CppFile({
