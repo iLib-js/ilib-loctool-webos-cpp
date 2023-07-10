@@ -5,6 +5,7 @@ ilib-webos-loctool-cpp is a plugin for the loctool allows it to read and localiz
 v1.6.0
 * Fixed an issue where didn't handle single quotes properly.
 * Supported pseudo localization.
+* Updated not to load common data repeatedly if it's loaded from another plugin in a project.
 
 v1.5.2
 * Updated dependencies.
