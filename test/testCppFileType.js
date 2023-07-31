@@ -1,7 +1,7 @@
 /*
  * testCppFileType.js - test the C++ file type handler object.
  *
- * Copyright (c) 2020-2021, JEDLSoft
+ * Copyright (c) 2020-2021, 2023 JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,15 +30,15 @@ var p = new CustomProject({
     locales:["en-GB"]
 });
 
-module.exports.cfiletype = {
-    testCFileTypeConstructor: function(test) {
+module.exports.cppfiletype = {
+    testCppFileTypeConstructor: function(test) {
         test.expect(1);
 
         var cft = new CppFileType(p);
         test.ok(cft);
         test.done();
     },
-    testCFileTypeHandlesCFileTrue: function(test) {
+    testCppFileTypeHandlesCFileTrue: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -46,7 +46,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("foo.cpp"));
         test.done();
     },
-    testCFileTypeHandlesCFileTrue2: function(test) {
+    testCppFileTypeHandlesCFileTrue2: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -54,7 +54,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("foo/bar/test.cpp"));
         test.done();
     },
-    testCFileTypeHandlesJSXFalse: function(test) {
+    testCppFileTypeHandlesJSXFalse: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -62,7 +62,7 @@ module.exports.cfiletype = {
         test.ok(!cft.handles("foo.jsx"));
         test.done();
     },
-    testCFileTypeHandlesCppFalse: function(test) {
+    testCppFileTypeHandlesCppFalse: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -70,12 +70,86 @@ module.exports.cfiletype = {
         test.ok(!cft.handles("foo.c"));
         test.done();
     },
-    testCFileTypeHandlesFalseClose: function(test) {
+    testCppFileTypeHandlesFalseClose: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
         test.ok(cft);
         test.ok(!cft.handles("foocpp"));
+        test.done();
+    },
+    testCppFileTypeHandlesCC: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("abc.cc"));
+        test.done();
+    },
+    testCppFileTypeHandlesCXX: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("src/core/main.cxx"));
+        test.done();
+    },
+    testCppFileTypeHandlesCpp: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("./src/lib/test.c++"));
+        test.done();
+    },
+    testCppFileTypeHandleshpp: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("foo.hpp"));
+        test.done();
+    },
+    testCppFileTypeHandleshppfalse: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(!cft.handles("fo.ohpp"));
+        test.done();
+    },
+    testCppFileTypeHandleshh: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("src/util.hh"));
+        test.done();
+    },
+    testCppFileTypeHandleshhfalse: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(!cft.handles("src/util.hhh"));
+        test.done();
+    },
+    testCppFileTypeHandlesxx: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("/foo/bar/abcd.hxx"));
+        test.done();
+    },
+    testCppFileTypeExtensions: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        var expected = [ ".cpp", ".cc", ".c++", ".cxx", ".hpp", ".hh", ".hxx"];
+
+        test.ok(cft);
+        test.deepEqual(cft.getExtensions(), expected);
         test.done();
     }
 };

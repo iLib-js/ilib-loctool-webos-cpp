@@ -868,5 +868,40 @@ module.exports.cppfile = {
         test.ok(set);
         test.equal(set.size(), 0);
         test.done();
+    },
+    testCppFileExtractCCFile: function(test) {
+        test.expect(11);
+
+        var cppf = new CppFile({
+            project: p,
+            pathName: "./t4.cc",
+            type: cppft
+        });
+        test.ok(cppf);
+
+        // should read the file
+        cppf.extract();
+        var set = cppf.getTranslationSet();
+        test.equal(set.size(), 5);
+
+        var r = set.getBySource("Bookmarks");
+        test.ok(r);
+        test.equal(r.getSource(), "Bookmarks");
+        test.equal(r.getKey(), "Bookmarks");
+
+        var r = set.getBy({
+            reskey: "Recommended Sites"
+        });
+        test.ok(r);
+        test.equal(r[0].getSource(), "Recommended Sites");
+        test.equal(r[0].getKey(), "Recommended Sites");
+
+        var r = set.getBy({
+            reskey: "Go to Settings"
+        });
+        test.ok(r);
+        test.equal(r[0].getSource(), "Go to Settings");
+        test.equal(r[0].getKey(), "Go to Settings");
+        test.done();
     }
 };
