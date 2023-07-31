@@ -30,15 +30,15 @@ var p = new CustomProject({
     locales:["en-GB"]
 });
 
-module.exports.cfiletype = {
-    testCFileTypeConstructor: function(test) {
+module.exports.cppfiletype = {
+    testCppFileTypeConstructor: function(test) {
         test.expect(1);
 
         var cft = new CppFileType(p);
         test.ok(cft);
         test.done();
     },
-    testCFileTypeHandlesCFileTrue: function(test) {
+    testCppFileTypeHandlesCFileTrue: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -46,7 +46,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("foo.cpp"));
         test.done();
     },
-    testCFileTypeHandlesCFileTrue2: function(test) {
+    testCppFileTypeHandlesCFileTrue2: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -54,7 +54,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("foo/bar/test.cpp"));
         test.done();
     },
-    testCFileTypeHandlesJSXFalse: function(test) {
+    testCppFileTypeHandlesJSXFalse: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -62,7 +62,7 @@ module.exports.cfiletype = {
         test.ok(!cft.handles("foo.jsx"));
         test.done();
     },
-    testCFileTypeHandlesCppFalse: function(test) {
+    testCppFileTypeHandlesCppFalse: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -70,7 +70,7 @@ module.exports.cfiletype = {
         test.ok(!cft.handles("foo.c"));
         test.done();
     },
-    testCFileTypeHandlesFalseClose: function(test) {
+    testCppFileTypeHandlesFalseClose: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -78,7 +78,7 @@ module.exports.cfiletype = {
         test.ok(!cft.handles("foocpp"));
         test.done();
     },
-    testCFileTypeHandlesCC: function(test) {
+    testCppFileTypeHandlesCC: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -86,7 +86,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("abc.cc"));
         test.done();
     },
-    testCFileTypeHandlesCXX: function(test) {
+    testCppFileTypeHandlesCXX: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -94,7 +94,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("src/core/main.cxx"));
         test.done();
     },
-    testCFileTypeHandlesCpp: function(test) {
+    testCppFileTypeHandlesCpp: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -102,7 +102,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("./src/lib/test.c++"));
         test.done();
     },
-    testCFileTypeHandleshpp: function(test) {
+    testCppFileTypeHandleshpp: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -110,7 +110,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("foo.hpp"));
         test.done();
     },
-    testCFileTypeHandleshppfalse: function(test) {
+    testCppFileTypeHandleshppfalse: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -118,7 +118,7 @@ module.exports.cfiletype = {
         test.ok(!cft.handles("fo.ohpp"));
         test.done();
     },
-    testCFileTypeHandleshh: function(test) {
+    testCppFileTypeHandleshh: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -126,7 +126,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("src/util.hh"));
         test.done();
     },
-    testCFileTypeHandleshhfalse: function(test) {
+    testCppFileTypeHandleshhfalse: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -134,7 +134,7 @@ module.exports.cfiletype = {
         test.ok(!cft.handles("src/util.hhh"));
         test.done();
     },
-    testCFileTypeHandlesxx: function(test) {
+    testCppFileTypeHandlesxx: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
@@ -142,7 +142,7 @@ module.exports.cfiletype = {
         test.ok(cft.handles("/foo/bar/abcd.hxx"));
         test.done();
     },
-    testCFileTypeExtensions: function(test) {
+    testCppFileTypeExtensions: function(test) {
         test.expect(2);
 
         var cft = new CppFileType(p);
