@@ -30,7 +30,8 @@ var CppFileType = function(project) {
     this.resourceType = "json";
     this.project = project;
     this.API = project.getAPI();
-    this.extensions = [ ".cpp"];
+    this.extensions = [ ".cpp", ".cc", ".c++", ".cxx", ".hpp", ".hh", ".hxx"];
+
     this.isloadCommonData = false;
     this.logger = this.API.getLogger("loctool.plugin.webOSCppFileType");
     this.extracted = this.API.newTranslationSet(project.getSourceLocale());
@@ -77,9 +78,11 @@ var CppFileType = function(project) {
 CppFileType.prototype.handles = function(pathName) {
     this.logger.debug("CppFileType handles " + pathName + "?");
     var ret = false;
-    if (pathName.length > 4 && pathName.substring(pathName.length - 4) === ".cpp") {
+
+    var extension = this._getExtension(pathName);
+    if (this.extensions.indexOf(extension) !== -1) {
         ret = true;
-    } 
+    }
 
     this.logger.debug(ret ? "Yes" : "No");
     return ret;
@@ -88,6 +91,13 @@ CppFileType.prototype.handles = function(pathName) {
 CppFileType.prototype.name = function() {
     return "C++ File Type";
 };
+
+CppFileType.prototype._getExtension = function(filepath) {
+    if (!filepath) return;
+    var basename = path.basename(filepath);
+    var ext = "." + basename.split(".")[1];
+    return ext;
+}
 
 CppFileType.prototype._addResource = function(resFileType, translated, res, locale) {
     var file;

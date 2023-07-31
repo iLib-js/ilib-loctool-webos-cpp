@@ -1,7 +1,7 @@
 /*
  * testCppFileType.js - test the C++ file type handler object.
  *
- * Copyright (c) 2020-2021, JEDLSoft
+ * Copyright (c) 2020-2021, 2023 JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,6 +76,80 @@ module.exports.cfiletype = {
         var cft = new CppFileType(p);
         test.ok(cft);
         test.ok(!cft.handles("foocpp"));
+        test.done();
+    },
+    testCFileTypeHandlesCC: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("abc.cc"));
+        test.done();
+    },
+    testCFileTypeHandlesCXX: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("src/core/main.cxx"));
+        test.done();
+    },
+    testCFileTypeHandlesCpp: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("./src/lib/test.c++"));
+        test.done();
+    },
+    testCFileTypeHandleshpp: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("foo.hpp"));
+        test.done();
+    },
+    testCFileTypeHandleshppfalse: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(!cft.handles("fo.ohpp"));
+        test.done();
+    },
+    testCFileTypeHandleshh: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("src/util.hh"));
+        test.done();
+    },
+    testCFileTypeHandleshhfalse: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(!cft.handles("src/util.hhh"));
+        test.done();
+    },
+    testCFileTypeHandlesxx: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        test.ok(cft);
+        test.ok(cft.handles("/foo/bar/abcd.hxx"));
+        test.done();
+    },
+    testCFileTypeExtensions: function(test) {
+        test.expect(2);
+
+        var cft = new CppFileType(p);
+        var expected = [ ".cpp", ".cc", ".c++", ".cxx", ".hpp", ".hh", ".hxx"];
+
+        test.ok(cft);
+        test.deepEqual(cft.getExtensions(), expected);
         test.done();
     }
 };
