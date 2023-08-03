@@ -272,10 +272,11 @@ CppFileType.prototype.write = function(translations, locales) {
                 }.bind(this));
             }.bind(this));
         }
-    
-        resources = this.pseudo.getAll().filter(function(resource) {
-            return resource.datatype === this.datatype;
-        }.bind(this));
+        if (this.project.settings[this.type] && !(this.project.settings[this.type].disablePseudo === true)){
+            resources = this.pseudo.getAll().filter(function(resource) {
+                return resource.datatype === this.datatype;
+            }.bind(this));
+        }
     } else {
         // generate mode
         this.genresources = this.project.getTranslations(translationLocales);
