@@ -1,6 +1,6 @@
 {
     "name": "ilib-loctool-webos-cpp",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "main": "./CppFileType.js",
     "description": "A loctool plugin that knows how to process C++ files",
     "license": "Apache-2.0",
@@ -32,8 +32,7 @@
         "README.md",
         "LICENSE",
         "CppFileType.js",
-        "CppFile.js",
-        "npm-shrinkwrap.json"
+        "CppFile.js"
     ],
     "repository": {
         "type": "git",
