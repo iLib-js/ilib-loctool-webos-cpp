@@ -16,11 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 if (!CppFile) {
     var CppFile = require("../CppFile.js");
     var CppFileType = require("../CppFileType.js");
     var CustomProject =  require("loctool/lib/CustomProject.js");
 }
+
 var p = new CustomProject({
     id: "app",
     plugins: ["../."],
@@ -28,24 +30,30 @@ var p = new CustomProject({
 }, "./test/testfiles", {
     locales:["en-GB"]
 });
+
 var cppft = new CppFileType(p);
+
 describe("cppfile", function() {
     test("CppFileConstructor", function() {
         expect.assertions(1);
+
         var cppf = new CppFile({project: p});
         expect(cppf).toBeTruthy();
     });
     test("CppFileConstructorParams", function() {
         expect.assertions(1);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./testfiles/t1.cpp",
             type: cppft
         });
+
         expect(cppf).toBeTruthy();
     });
     test("CppFileConstructorNoFile", function() {
         expect.assertions(1);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
@@ -55,6 +63,7 @@ describe("cppfile", function() {
     });
     test("CppFileMakeKey", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
@@ -65,6 +74,7 @@ describe("cppfile", function() {
     });
     test("CppFileMakeKey2", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
@@ -75,6 +85,7 @@ describe("cppfile", function() {
     });
     test("CppFileMakeKeyWithSpace", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
@@ -85,6 +96,7 @@ describe("cppfile", function() {
     });
     test("CppFileMakeKeyWithSpaces", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
@@ -95,6 +107,7 @@ describe("cppfile", function() {
     });
     test("CppFileParseSingleQuote", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
@@ -102,45 +115,57 @@ describe("cppfile", function() {
         });
         expect(cppf).toBeTruthy();
         cppf.parse('ResBundleAdaptor::Instance().getLocString("Don\'t save");');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
         expect(set.size()).toBe(1);
+
         var r = set.getBy({
             reskey: "Don't save"
         });
         expect(r).toBeTruthy();
+
         expect(r[0].getSource()).toBe("Don't save");
         expect(r[0].getKey()).toBe("Don't save");
     });
     test("CppFileParseSimpleGetByKey", function() {
         expect.assertions(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("Yes");');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBy({
             reskey: "Yes"
         });
         expect(r).toBeTruthy();
+
         expect(r[0].getSource()).toBe("Yes");
         expect(r[0].getKey()).toBe("Yes");
     });
     test("CppFileParseSimpleGetBySource", function() {
         expect.assertions(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("Yes");');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
@@ -148,15 +173,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseSimpleGetBySourceWithSpace", function() {
         expect.assertions(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString(" Yes ");');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource(" Yes ");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe(" Yes ");
@@ -164,15 +193,20 @@ describe("cppfile", function() {
     });
     test("CppFileParseSimpleGetBySourceWithSpaces", function() {
         expect.assertions(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("     Yes   ");');
+
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("     Yes   ");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("     Yes   ");
@@ -180,15 +214,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseCppSimple", function() {
         expect.assertions(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('i18n_msg = ResBundleAdaptor::Instance().getLocString("Yes");');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
@@ -196,15 +234,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseCppSimple2", function() {
         expect.assertions(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("Try again.");');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Try again.");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Try again.");
@@ -212,15 +254,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseMoreComplex", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");  // i18n // photovideo-22');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
@@ -229,15 +275,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseSimpleWithTranslatorComment", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n click button');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
@@ -246,15 +296,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseSimpleWithTranslatorComment2", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); /* i18n Yes button for Bluray player */');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
@@ -263,15 +317,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseSimpleWithTranslatorComment3", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n //  Yes button for Bluray player');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
@@ -280,15 +338,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseSimpleWithTranslatorComment4", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n : Power button');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
@@ -297,15 +359,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseSimpleWithTranslatorComment5", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n  Connect WiSA Dongle');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
@@ -314,15 +380,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseSimpleWithTranslatorComment6", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n : GUIDE button for Set-top box, used in screen remote');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
@@ -331,15 +401,18 @@ describe("cppfile", function() {
     });
     test("CppFileParseWithKey", function() {
         expect.assertions(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("PictureMode.Standard", "Standard");');
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBy({
             reskey: "PictureMode.Standard"
         });
@@ -349,21 +422,26 @@ describe("cppfile", function() {
     });
     test("CppFileParseWithKey2", function() {
         expect.assertions(8);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");m_localeStringNo   = mp_resBundle->getLocString("NO.key", "NO");');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBy({
             reskey: "YES.key"
         });
         expect(r).toBeTruthy();
         expect(r[0].getSource()).toBe("YES");
         expect(r[0].getKey()).toBe("YES.key");
+
         var r = set.getBy({
             reskey: "NO.key"
         });
@@ -373,15 +451,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseWithKeyandComment", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");   // i18n // photovideo-48');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBy({
             reskey: "YES.key"
         });
@@ -392,19 +474,24 @@ describe("cppfile", function() {
     });
     test("CppFileParseMultiple", function() {
         expect.assertions(8);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES"); m_localeStringNo   = mp_resBundle->getLocString("NO" );');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("YES");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("YES");
         expect(r.getKey()).toBe("YES");
+
         r = set.getBySource("NO");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("NO");
@@ -412,19 +499,24 @@ describe("cppfile", function() {
     });
     test("CppFileParseMultiple2", function() {
         expect.assertions(9);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES"); m_localeStringNo   = mp_resBundle->getLocString("NO" ); // i18n Detail description');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("YES");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("YES");
         expect(r.getKey()).toBe("YES");
+
         r = set.getBySource("NO");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("NO");
@@ -433,15 +525,19 @@ describe("cppfile", function() {
     });
     test("CppFileParseMultipleWithKey", function() {
         expect.assertions(10);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");  m_localeStringNo   = mp_resBundle->getLocString("NO.key", "NO"); m_bufStr = mp_resBundle->getLocString("Loading", "Buffering is in progress...");');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBy({
             reskey: "YES.key"
         });
@@ -449,6 +545,7 @@ describe("cppfile", function() {
         expect(r[0].getSource()).toBe("YES");
         expect(r[0].getAutoKey()).toBeTruthy();
         expect(r[0].getKey()).toBe("YES.key");
+
         r = set.getBy({
             reskey: "NO.key"
         });
@@ -459,59 +556,73 @@ describe("cppfile", function() {
     });
     test("CppFileParseWithDups", function() {
         expect.assertions(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");');
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         var r = set.getBySource("YES");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("YES");
         expect(r.getKey()).toBe("YES.key");
+
         expect(set.size()).toBe(1);
     });
     test("CppFileParseBogusNonStringParam", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString(YES); ');
+
         var set = cppf.getTranslationSet();
         expect(set.size()).toBe(0);
     });
     test("CppFileParseEmptyParams", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString();');
+
         var set = cppf.getTranslationSet();
         expect(set.size()).toBe(0);
     });
     test("CppFileParseWholeWord", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('m_localeStringYes  = mp_resBundle->ggetLocString();');
+
         var set = cppf.getTranslationSet();
         expect(set.size()).toBe(0);
     });
     test("CppFileParsePunctuationBeforeRB", function() {
         expect.assertions(12);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
@@ -535,17 +646,22 @@ describe("cppfile", function() {
             '    i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes");\n' +
             '    i18n_no     = ResBundleAdaptor::Instance().getLocString("No");\n' +
             '}\n');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
+
         expect(set.size()).toBe(11);
+
         var r = set.getBySource("Yes");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Yes");
         expect(r.getKey()).toBe("Yes");
+
         r = set.getBySource("Brighten/dim the screen");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Brighten/dim the screen");
         expect(r.getKey()).toBe("Brighten/dim the screen");
+
         r = set.getBySource("Channel 20 (channel number)");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Channel 20 (channel number)");
@@ -553,26 +669,31 @@ describe("cppfile", function() {
     });
     test("CppFileExtractFile", function() {
         expect.assertions(11);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./t1.cpp",
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         // should read the file
         cppf.extract();
         var set = cppf.getTranslationSet();
         expect(set.size()).toBe(12);
+
         var r = set.getBySource("Network settings");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Network settings");
         expect(r.getKey()).toBe("Network settings");
+
         var r = set.getBy({
             reskey: "Search 'OOO(search keyword)' on YouTube"
         });
         expect(r).toBeTruthy();
         expect(r[0].getSource()).toBe("Search 'OOO(search keyword)' on YouTube");
         expect(r[0].getKey()).toBe("Search 'OOO(search keyword)' on YouTube");
+
         var r = set.getBy({
             reskey: "Switch to \"the game\" console"
         });
@@ -582,32 +703,38 @@ describe("cppfile", function() {
     });
     test("CppFileExtractFile2", function() {
         expect.assertions(14);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./t2.cpp",
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         // should read the file
         cppf.extract();
         var set = cppf.getTranslationSet();
         expect(set.size()).toBe(4);
+
         var r = set.getBySource("You're\n Welcome.");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("You're\n Welcome.");
         expect(r.getKey()).toBe("You're\n Welcome.");
+
         var r = set.getBy({
             reskey: "No,\n \t Thanks."
         });
         expect(r).toBeTruthy();
         expect(r[0].getSource()).toBe("No,\n \t Thanks.");
         expect(r[0].getKey()).toBe("No,\n \t Thanks.");
+
         var r = set.getBy({
             reskey: "Yes \"yes\"."
         });
         expect(r).toBeTruthy();
         expect(r[0].getSource()).toBe("Yes \"yes\".");
         expect(r[0].getKey()).toBe("Yes \"yes\".");
+
         var r = set.getBy({
             reskey: "Do you want to change the settings from \'Digital Sound Output\' to \'Pass Through\' to minimize audio delay while playing game?"
         });
@@ -617,19 +744,23 @@ describe("cppfile", function() {
     });
     test("CppFileExtractUndefinedFile", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         // should attempt to read the file and not fail
         cppf.extract();
+
         var set = cppf.getTranslationSet();
         expect(set.size()).toBe(0);
     });
     test("CppFileTest3", function() {
         expect.assertions(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./t3.cpp",
@@ -638,57 +769,69 @@ describe("cppfile", function() {
         expect(cppf).toBeTruthy();
         // should attempt to read the file and not fail
         cppf.extract();
+
         var set = cppf.getTranslationSet();
         expect(set.size()).toBe(3);
     });
     test("CppFileNotParseCommentLine", function() {
         expect.assertions(3);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('// ResBundleAdaptor::Instance().getLocString(" Yes ");\n');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
         expect(set.size()).toBe(0);
     });
     test("CppFileNotParseCommentLine2", function() {
         expect.assertions(3);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         cppf.parse('/* ResBundleAdaptor::Instance().getLocString("NO"); */\n');
+
         var set = cppf.getTranslationSet();
         expect(set).toBeTruthy();
         expect(set.size()).toBe(0);
     });
     test("CppFileExtractCCFile", function() {
         expect.assertions(11);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./t4.cc",
             type: cppft
         });
         expect(cppf).toBeTruthy();
+
         // should read the file
         cppf.extract();
         var set = cppf.getTranslationSet();
         expect(set.size()).toBe(5);
+
         var r = set.getBySource("Bookmarks");
         expect(r).toBeTruthy();
         expect(r.getSource()).toBe("Bookmarks");
         expect(r.getKey()).toBe("Bookmarks");
+
         var r = set.getBy({
             reskey: "Recommended Sites"
         });
         expect(r).toBeTruthy();
         expect(r[0].getSource()).toBe("Recommended Sites");
         expect(r[0].getKey()).toBe("Recommended Sites");
+
         var r = set.getBy({
             reskey: "Go to Settings"
         });
