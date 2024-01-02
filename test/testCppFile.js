@@ -1,5 +1,5 @@
 /*
- * CppFile.test.js - test the C++ file handler object.
+ * testCppFile.js - test the C++ file handler object.
  *
  * Copyright (c) 2020-2021,2023 JEDLSoft
  *
@@ -16,11 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 if (!CppFile) {
     var CppFile = require("../CppFile.js");
     var CppFileType = require("../CppFileType.js");
     var CustomProject =  require("loctool/lib/CustomProject.js");
 }
+
 var p = new CustomProject({
     id: "app",
     plugins: ["../."],
@@ -28,496 +30,658 @@ var p = new CustomProject({
 }, "./test/testfiles", {
     locales:["en-GB"]
 });
+
 var cppft = new CppFileType(p);
-describe("cppfile", function() {
-    test("CppFileConstructor", function() {
-        expect.assertions(1);
+
+module.exports.cppfile = {
+    testCppFileConstructor: function(test) {
+        test.expect(1);
+
         var cppf = new CppFile({project: p});
-        expect(cppf).toBeTruthy();
-    });
-    test("CppFileConstructorParams", function() {
-        expect.assertions(1);
+        test.ok(cppf);
+        test.done();
+    },
+    testCppFileConstructorParams: function(test) {
+        test.expect(1);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./testfiles/t1.cpp",
             type: cppft
         });
-        expect(cppf).toBeTruthy();
-    });
-    test("CppFileConstructorNoFile", function() {
-        expect.assertions(1);
+
+        test.ok(cppf);
+        test.done();
+    },
+    testCppFileConstructorNoFile: function(test) {
+        test.expect(1);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
-    });
-    test("CppFileMakeKey", function() {
-        expect.assertions(2);
+        test.ok(cppf);
+        test.done();
+    },
+    testCppFileMakeKey: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
-        expect(cppf.makeKey("This is a test")).toBe("This is a test");
-    });
-    test("CppFileMakeKey2", function() {
-        expect.assertions(2);
+        test.ok(cppf);
+        test.equal(cppf.makeKey("This is a test"), "This is a test");
+        test.done();
+    },
+    testCppFileMakeKey2: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
-        expect(cppf.makeKey("This is a \t\"test\"")).toBe("This is a \t\"test\"");
-    });
-    test("CppFileMakeKeyWithSpace", function() {
-        expect.assertions(2);
+        test.ok(cppf);
+        test.equal(cppf.makeKey("This is a \t\"test\""), "This is a \t\"test\"");
+        test.done();
+    },
+    testCppFileMakeKeyWithSpace: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
-        expect(cppf.makeKey(" This is a test ")).toBe(" This is a test ");
-    });
-    test("CppFileMakeKeyWithSpaces", function() {
-        expect.assertions(2);
+        test.ok(cppf);
+        test.equal(cppf.makeKey(" This is a test "), " This is a test ");
+        test.done();
+    },
+    testCppFileMakeKeyWithSpaces: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
-        expect(cppf.makeKey("   This is a test   ")).toBe("   This is a test   ");
-    });
-    test("CppFileParseSingleQuote", function() {
-        expect.assertions(6);
+        test.ok(cppf);
+        test.equal(cppf.makeKey("   This is a test   "), "   This is a test   ");
+        test.done();
+    },
+    testCppFileParseSingleQuote: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
         cppf.parse('ResBundleAdaptor::Instance().getLocString("Don\'t save");');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
-        expect(set.size()).toBe(1);
+        test.ok(set);
+        test.equal(set.size(), 1);
+
         var r = set.getBy({
             reskey: "Don't save"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Don't save");
-        expect(r[0].getKey()).toBe("Don't save");
-    });
-    test("CppFileParseSimpleGetByKey", function() {
-        expect.assertions(5);
+        test.ok(r);
+
+        test.equal(r[0].getSource(), "Don't save");
+        test.equal(r[0].getKey(), "Don't save");
+        test.done();
+    },
+    testCppFileParseSimpleGetByKey: function(test) {
+        test.expect(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("Yes");');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBy({
             reskey: "Yes"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Yes");
-        expect(r[0].getKey()).toBe("Yes");
-    });
-    test("CppFileParseSimpleGetBySource", function() {
-        expect.assertions(5);
+        test.ok(r);
+
+        test.equal(r[0].getSource(), "Yes");
+        test.equal(r[0].getKey(), "Yes");
+
+        test.done();
+    },
+    testCppFileParseSimpleGetBySource: function(test) {
+        test.expect(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("Yes");');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
-    });
-    test("CppFileParseSimpleGetBySourceWithSpace", function() {
-        expect.assertions(5);
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+
+        test.done();
+    },
+    testCppFileParseSimpleGetBySourceWithSpace: function(test) {
+        test.expect(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString(" Yes ");');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource(" Yes ");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe(" Yes ");
-        expect(r.getKey()).toBe(" Yes ");
-    });
-    test("CppFileParseSimpleGetBySourceWithSpaces", function() {
-        expect.assertions(5);
+        test.ok(r);
+        test.equal(r.getSource(), " Yes ");
+        test.equal(r.getKey(), " Yes ");
+
+        test.done();
+    },
+    testCppFileParseSimpleGetBySourceWithSpaces: function(test) {
+        test.expect(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("     Yes   ");');
+
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("     Yes   ");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("     Yes   ");
-        expect(r.getKey()).toBe("     Yes   ");
-    });
-    test("CppFileParseCppSimple", function() {
-        expect.assertions(5);
+        test.ok(r);
+        test.equal(r.getSource(), "     Yes   ");
+        test.equal(r.getKey(), "     Yes   ");
+
+        test.done();
+    },
+    testCppFileParseCppSimple: function(test) {
+        test.expect(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('i18n_msg = ResBundleAdaptor::Instance().getLocString("Yes");');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
-    });
-    test("CppFileParseCppSimple2", function() {
-        expect.assertions(5);
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+
+        test.done();
+    },
+    testCppFileParseCppSimple2: function(test) {
+        test.expect(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("Try again.");');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Try again.");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Try again.");
-        expect(r.getKey()).toBe("Try again.");
-    });
-    test("CppFileParseMoreComplex", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r.getSource(), "Try again.");
+        test.equal(r.getKey(), "Try again.");
+
+        test.done();
+    },
+    testCppFileParseMoreComplex: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('ResBundleAdaptor::Instance().getLocString("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");  // i18n // photovideo-22');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
-        expect(r.getKey()).toBe("[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
-        expect(r.getComment()).toBe("photovideo-22");
-    });
-    test("CppFileParseSimpleWithTranslatorComment", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r.getSource(), "[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
+        test.equal(r.getKey(), "[PIN CODE : %s]<br> Enter this PIN code in your %s within 120 seconds.");
+        test.equal(r.getComment(), "photovideo-22");
+        test.done();
+    },
+    testCppFileParseSimpleWithTranslatorComment: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n click button');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
-        expect(r.getComment()).toBe("click button");
-    });
-    test("CppFileParseSimpleWithTranslatorComment2", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "click button");
+
+        test.done();
+    },
+    testCppFileParseSimpleWithTranslatorComment2: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); /* i18n Yes button for Bluray player */');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
-        expect(r.getComment()).toBe("Yes button for Bluray player");
-    });
-    test("CppFileParseSimpleWithTranslatorComment3", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "Yes button for Bluray player");
+
+        test.done();
+    },
+    testCppFileParseSimpleWithTranslatorComment3: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n //  Yes button for Bluray player');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
-        expect(r.getComment()).toBe("Yes button for Bluray player");
-    });
-    test("CppFileParseSimpleWithTranslatorComment4", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "Yes button for Bluray player");
+
+        test.done();
+    },
+    testCppFileParseSimpleWithTranslatorComment4: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n : Power button');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
-        expect(r.getComment()).toBe("Power button");
-    });
-    test("CppFileParseSimpleWithTranslatorComment5", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "Power button");
+
+        test.done();
+    },
+    testCppFileParseSimpleWithTranslatorComment5: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n  Connect WiSA Dongle');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
-        expect(r.getComment()).toBe("Connect WiSA Dongle");
-    });
-    test("CppFileParseSimpleWithTranslatorComment6", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "Connect WiSA Dongle");
+
+        test.done();
+    },
+    testCppFileParseSimpleWithTranslatorComment6: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes"); // i18n : GUIDE button for Set-top box, used in screen remote');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
-        expect(r.getComment()).toBe("GUIDE button for Set-top box, used in screen remote");
-    });
-    test("CppFileParseWithKey", function() {
-        expect.assertions(5);
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+        test.equal(r.getComment(), "GUIDE button for Set-top box, used in screen remote");
+
+        test.done();
+    },
+    testCppFileParseWithKey: function(test) {
+        test.expect(5);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('i18n_yes    = ResBundleAdaptor::Instance().getLocString("PictureMode.Standard", "Standard");');
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBy({
             reskey: "PictureMode.Standard"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Standard");
-        expect(r[0].getKey()).toBe("PictureMode.Standard");
-    });
-    test("CppFileParseWithKey2", function() {
-        expect.assertions(8);
+        test.ok(r);
+        test.equal(r[0].getSource(), "Standard");
+        test.equal(r[0].getKey(), "PictureMode.Standard");
+
+        test.done();
+    },
+    testCppFileParseWithKey2: function(test) {
+        test.expect(8);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");m_localeStringNo   = mp_resBundle->getLocString("NO.key", "NO");');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBy({
             reskey: "YES.key"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("YES");
-        expect(r[0].getKey()).toBe("YES.key");
+        test.ok(r);
+        test.equal(r[0].getSource(), "YES");
+        test.equal(r[0].getKey(), "YES.key");
+
         var r = set.getBy({
             reskey: "NO.key"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("NO");
-        expect(r[0].getKey()).toBe("NO.key");
-    });
-    test("CppFileParseWithKeyandComment", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r[0].getSource(), "NO");
+        test.equal(r[0].getKey(), "NO.key");
+
+        test.done();
+    },
+    testCppFileParseWithKeyandComment: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");   // i18n // photovideo-48');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBy({
             reskey: "YES.key"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("YES");
-        expect(r[0].getKey()).toBe("YES.key");
-        expect(r[0].getComment()).toBe("photovideo-48");
-    });
-    test("CppFileParseMultiple", function() {
-        expect.assertions(8);
+        test.ok(r);
+        test.equal(r[0].getSource(), "YES");
+        test.equal(r[0].getKey(), "YES.key");
+        test.equal(r[0].getComment(), "photovideo-48");
+
+        test.done();
+    },
+    testCppFileParseMultiple: function(test) {
+        test.expect(8);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES"); m_localeStringNo   = mp_resBundle->getLocString("NO" );');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("YES");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("YES");
-        expect(r.getKey()).toBe("YES");
+        test.ok(r);
+        test.equal(r.getSource(), "YES");
+        test.equal(r.getKey(), "YES");
+
         r = set.getBySource("NO");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("NO");
-        expect(r.getKey()).toBe("NO");
-    });
-    test("CppFileParseMultiple2", function() {
-        expect.assertions(9);
+        test.ok(r);
+        test.equal(r.getSource(), "NO");
+        test.equal(r.getKey(), "NO");
+
+        test.done();
+    },
+    testCppFileParseMultiple2: function(test) {
+        test.expect(9);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES"); m_localeStringNo   = mp_resBundle->getLocString("NO" ); // i18n Detail description');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("YES");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("YES");
-        expect(r.getKey()).toBe("YES");
+        test.ok(r);
+        test.equal(r.getSource(), "YES");
+        test.equal(r.getKey(), "YES");
+
         r = set.getBySource("NO");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("NO");
-        expect(r.getKey()).toBe("NO");
-        expect(r.getComment()).toBe("Detail description");
-    });
-    test("CppFileParseMultipleWithKey", function() {
-        expect.assertions(10);
+        test.ok(r);
+        test.equal(r.getSource(), "NO");
+        test.equal(r.getKey(), "NO");
+        test.equal(r.getComment(), "Detail description");
+
+        test.done();
+    },
+    testCppFileParseMultipleWithKey: function(test) {
+        test.expect(10);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");  m_localeStringNo   = mp_resBundle->getLocString("NO.key", "NO"); m_bufStr = mp_resBundle->getLocString("Loading", "Buffering is in progress...");');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBy({
             reskey: "YES.key"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("YES");
-        expect(r[0].getAutoKey()).toBeTruthy();
-        expect(r[0].getKey()).toBe("YES.key");
+        test.ok(r);
+        test.equal(r[0].getSource(), "YES");
+        test.ok(r[0].getAutoKey());
+        test.equal(r[0].getKey(), "YES.key");
+
         r = set.getBy({
             reskey: "NO.key"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("NO");
-        expect(r[0].getAutoKey()).toBeTruthy();
-        expect(r[0].getKey()).toBe("NO.key");
-    });
-    test("CppFileParseWithDups", function() {
-        expect.assertions(6);
+        test.ok(r);
+        test.equal(r[0].getSource(), "NO");
+        test.ok(r[0].getAutoKey());
+        test.equal(r[0].getKey(), "NO.key");
+
+        test.done();
+    },
+    testCppFileParseWithDups: function(test) {
+        test.expect(6);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");m_localeStringYes  = mp_resBundle->getLocString("YES.key", "YES");');
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
+        test.ok(set);
+
         var r = set.getBySource("YES");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("YES");
-        expect(r.getKey()).toBe("YES.key");
-        expect(set.size()).toBe(1);
-    });
-    test("CppFileParseBogusNonStringParam", function() {
-        expect.assertions(2);
+        test.ok(r);
+        test.equal(r.getSource(), "YES");
+        test.equal(r.getKey(), "YES.key");
+
+        test.equal(set.size(), 1);
+
+        test.done();
+    },
+    testCppFileParseBogusNonStringParam: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString(YES); ');
+
         var set = cppf.getTranslationSet();
-        expect(set.size()).toBe(0);
-    });
-    test("CppFileParseEmptyParams", function() {
-        expect.assertions(2);
+        test.equal(set.size(), 0);
+
+        test.done();
+    },
+    testCppFileParseEmptyParams: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->getLocString();');
+
         var set = cppf.getTranslationSet();
-        expect(set.size()).toBe(0);
-    });
-    test("CppFileParseWholeWord", function() {
-        expect.assertions(2);
+        test.equal(set.size(), 0);
+
+        test.done();
+    },
+    testCppFileParseWholeWord: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('m_localeStringYes  = mp_resBundle->ggetLocString();');
+
         var set = cppf.getTranslationSet();
-        expect(set.size()).toBe(0);
-    });
-    test("CppFileParsePunctuationBeforeRB", function() {
-        expect.assertions(12);
+        test.equal(set.size(), 0);
+
+        test.done();
+    },
+    testCppFileParsePunctuationBeforeRB: function(test) {
+        test.expect(12);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
         cppf.parse('        \n'+
             '    if (nlp_supported) {\n' +
             '        i18n_msg = ResBundleAdaptor::Instance().getLocString("Voice recognition will be available by connecting TV to the network.") + "<br>\"" +\n' +
@@ -535,165 +699,209 @@ describe("cppfile", function() {
             '    i18n_yes    = ResBundleAdaptor::Instance().getLocString("Yes");\n' +
             '    i18n_no     = ResBundleAdaptor::Instance().getLocString("No");\n' +
             '}\n');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
-        expect(set.size()).toBe(11);
+        test.ok(set);
+
+        test.equal(set.size(), 11);
+
         var r = set.getBySource("Yes");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Yes");
-        expect(r.getKey()).toBe("Yes");
+        test.ok(r);
+        test.equal(r.getSource(), "Yes");
+        test.equal(r.getKey(), "Yes");
+
         r = set.getBySource("Brighten/dim the screen");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Brighten/dim the screen");
-        expect(r.getKey()).toBe("Brighten/dim the screen");
+        test.ok(r);
+        test.equal(r.getSource(), "Brighten/dim the screen");
+        test.equal(r.getKey(), "Brighten/dim the screen");
+
         r = set.getBySource("Channel 20 (channel number)");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Channel 20 (channel number)");
-        expect(r.getKey()).toBe("Channel 20 (channel number)");
-    });
-    test("CppFileExtractFile", function() {
-        expect.assertions(11);
+        test.ok(r);
+        test.equal(r.getSource(), "Channel 20 (channel number)");
+        test.equal(r.getKey(), "Channel 20 (channel number)");
+
+        test.done();
+    },
+    testCppFileExtractFile: function(test) {
+        test.expect(11);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./t1.cpp",
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         // should read the file
         cppf.extract();
         var set = cppf.getTranslationSet();
-        expect(set.size()).toBe(12);
+        test.equal(set.size(), 12);
+
         var r = set.getBySource("Network settings");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Network settings");
-        expect(r.getKey()).toBe("Network settings");
+        test.ok(r);
+        test.equal(r.getSource(), "Network settings");
+        test.equal(r.getKey(), "Network settings");
+
         var r = set.getBy({
             reskey: "Search 'OOO(search keyword)' on YouTube"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Search 'OOO(search keyword)' on YouTube");
-        expect(r[0].getKey()).toBe("Search 'OOO(search keyword)' on YouTube");
+        test.ok(r);
+        test.equal(r[0].getSource(), "Search 'OOO(search keyword)' on YouTube");
+        test.equal(r[0].getKey(), "Search 'OOO(search keyword)' on YouTube");
+
         var r = set.getBy({
             reskey: "Switch to \"the game\" console"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Switch to \"the game\" console");
-        expect(r[0].getKey()).toBe("Switch to \"the game\" console");
-    });
-    test("CppFileExtractFile2", function() {
-        expect.assertions(14);
+        test.ok(r);
+        test.equal(r[0].getSource(), "Switch to \"the game\" console");
+        test.equal(r[0].getKey(), "Switch to \"the game\" console");
+
+        test.done();
+    },
+    testCppFileExtractFile2: function(test) {
+        test.expect(14);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./t2.cpp",
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         // should read the file
         cppf.extract();
         var set = cppf.getTranslationSet();
-        expect(set.size()).toBe(4);
+        test.equal(set.size(), 4);
+
         var r = set.getBySource("You're\n Welcome.");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("You're\n Welcome.");
-        expect(r.getKey()).toBe("You're\n Welcome.");
+        test.ok(r);
+        test.equal(r.getSource(), "You're\n Welcome.");
+        test.equal(r.getKey(), "You're\n Welcome.");
+
         var r = set.getBy({
             reskey: "No,\n \t Thanks."
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("No,\n \t Thanks.");
-        expect(r[0].getKey()).toBe("No,\n \t Thanks.");
+        test.ok(r);
+        test.equal(r[0].getSource(), "No,\n \t Thanks.");
+        test.equal(r[0].getKey(), "No,\n \t Thanks.");
+
         var r = set.getBy({
             reskey: "Yes \"yes\"."
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Yes \"yes\".");
-        expect(r[0].getKey()).toBe("Yes \"yes\".");
+        test.ok(r);
+        test.equal(r[0].getSource(), "Yes \"yes\".");
+        test.equal(r[0].getKey(), "Yes \"yes\".");
+
         var r = set.getBy({
             reskey: "Do you want to change the settings from \'Digital Sound Output\' to \'Pass Through\' to minimize audio delay while playing game?"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Do you want to change the settings from 'Digital Sound Output' to 'Pass Through' to minimize audio delay while playing game?");
-        expect(r[0].getKey()).toBe("Do you want to change the settings from 'Digital Sound Output' to 'Pass Through' to minimize audio delay while playing game?");
-    });
-    test("CppFileExtractUndefinedFile", function() {
-        expect.assertions(2);
+        test.ok(r);
+        test.equal(r[0].getSource(), "Do you want to change the settings from 'Digital Sound Output' to 'Pass Through' to minimize audio delay while playing game?");
+        test.equal(r[0].getKey(), "Do you want to change the settings from 'Digital Sound Output' to 'Pass Through' to minimize audio delay while playing game?");
+
+        test.done();
+    },
+    testCppFileExtractUndefinedFile: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         // should attempt to read the file and not fail
         cppf.extract();
+
         var set = cppf.getTranslationSet();
-        expect(set.size()).toBe(0);
-    });
-    test("CppFileTest3", function() {
-        expect.assertions(2);
+        test.equal(set.size(), 0);
+        test.done();
+    },
+    testCppFileTest3: function(test) {
+        test.expect(2);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./t3.cpp",
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
         // should attempt to read the file and not fail
         cppf.extract();
+
         var set = cppf.getTranslationSet();
-        expect(set.size()).toBe(3);
-    });
-    test("CppFileNotParseCommentLine", function() {
-        expect.assertions(3);
+        test.equal(set.size(), 3);
+
+        test.done();
+    },
+    testCppFileNotParseCommentLine: function(test) {
+        test.expect(3);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('// ResBundleAdaptor::Instance().getLocString(" Yes ");\n');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
-        expect(set.size()).toBe(0);
-    });
-    test("CppFileNotParseCommentLine2", function() {
-        expect.assertions(3);
+        test.ok(set);
+        test.equal(set.size(), 0);
+        test.done();
+    },
+    testCppFileNotParseCommentLine2: function(test) {
+        test.expect(3);
+
         var cppf = new CppFile({
             project: p,
             pathName: undefined,
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         cppf.parse('/* ResBundleAdaptor::Instance().getLocString("NO"); */\n');
+
         var set = cppf.getTranslationSet();
-        expect(set).toBeTruthy();
-        expect(set.size()).toBe(0);
-    });
-    test("CppFileExtractCCFile", function() {
-        expect.assertions(11);
+        test.ok(set);
+        test.equal(set.size(), 0);
+        test.done();
+    },
+    testCppFileExtractCCFile: function(test) {
+        test.expect(11);
+
         var cppf = new CppFile({
             project: p,
             pathName: "./t4.cc",
             type: cppft
         });
-        expect(cppf).toBeTruthy();
+        test.ok(cppf);
+
         // should read the file
         cppf.extract();
         var set = cppf.getTranslationSet();
-        expect(set.size()).toBe(5);
+        test.equal(set.size(), 5);
+
         var r = set.getBySource("Bookmarks");
-        expect(r).toBeTruthy();
-        expect(r.getSource()).toBe("Bookmarks");
-        expect(r.getKey()).toBe("Bookmarks");
+        test.ok(r);
+        test.equal(r.getSource(), "Bookmarks");
+        test.equal(r.getKey(), "Bookmarks");
+
         var r = set.getBy({
             reskey: "Recommended Sites"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Recommended Sites");
-        expect(r[0].getKey()).toBe("Recommended Sites");
+        test.ok(r);
+        test.equal(r[0].getSource(), "Recommended Sites");
+        test.equal(r[0].getKey(), "Recommended Sites");
+
         var r = set.getBy({
             reskey: "Go to Settings"
         });
-        expect(r).toBeTruthy();
-        expect(r[0].getSource()).toBe("Go to Settings");
-        expect(r[0].getKey()).toBe("Go to Settings");
-    });
-});
+        test.ok(r);
+        test.equal(r[0].getSource(), "Go to Settings");
+        test.equal(r[0].getKey(), "Go to Settings");
+        test.done();
+    }
+};
